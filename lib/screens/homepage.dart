@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:optiparser/components/summarybox.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -36,7 +37,7 @@ class _HomepageState extends State<Homepage> {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(16.0),
-                boxShadow: [
+                boxShadow: const [
                   BoxShadow(
                     color: Colors.black26,
                     blurRadius: 10.0,
@@ -45,32 +46,32 @@ class _HomepageState extends State<Homepage> {
                   ),
                 ],
               ),
-              child: Column(
+              child: const Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
+                  Text(
                     'Weekly Summary',
                     style: TextStyle(
                       fontSize: 20.0,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 10.0),
+                  SizedBox(height: 10.0),
                   // Placeholder for animations (income, expense, net overall)
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: const [
-                      SummaryBox(
+                    children: [
+                      Summarybox(
                         title: 'Income',
                         amount: '\$2,500',
                         color: Colors.green,
                       ),
-                      SummaryBox(
+                      Summarybox(
                         title: 'Expense',
                         amount: '\$1,200',
                         color: Colors.red,
                       ),
-                      SummaryBox(
+                      Summarybox(
                         title: 'Net',
                         amount: '\$1,300',
                         color: Colors.blue,
@@ -89,7 +90,7 @@ class _HomepageState extends State<Homepage> {
               decoration: BoxDecoration(
                 color: Colors.grey[100],
                 borderRadius: BorderRadius.circular(16.0),
-                boxShadow: [
+                boxShadow: const [
                   BoxShadow(
                     color: Colors.black12,
                     blurRadius: 8.0,
@@ -202,39 +203,3 @@ class _HomepageState extends State<Homepage> {
   }
 }
 
-class SummaryBox extends StatelessWidget {
-  final String title;
-  final String amount;
-  final Color color;
-
-  const SummaryBox({
-    required this.title,
-    required this.amount,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(
-          title,
-          style: TextStyle(
-            fontSize: 16.0,
-            fontWeight: FontWeight.bold,
-            color: color,
-          ),
-        ),
-        const SizedBox(height: 5.0),
-        Text(
-          amount,
-          style: TextStyle(
-            fontSize: 18.0,
-            fontWeight: FontWeight.bold,
-            color: color,
-          ),
-        ),
-      ],
-    );
-  }
-}
