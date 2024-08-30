@@ -46,7 +46,7 @@ class _HomepageState extends State<Homepage> {
       builder: (context) => CupertinoActionSheet(
         actions: [
           CupertinoActionSheetAction(
-            child: Text('Photo Gallery'),
+            child: const Text('Photo Gallery'),
             onPressed: () {
               // close the options modal
               Navigator.of(context).pop();
@@ -55,7 +55,7 @@ class _HomepageState extends State<Homepage> {
             },
           ),
           CupertinoActionSheetAction(
-            child: Text('Camera'),
+            child: const Text('Camera'),
             onPressed: () {
               // close the options modal
               Navigator.of(context).pop();
@@ -185,7 +185,7 @@ class _HomepageState extends State<Homepage> {
                   ),
                   const SizedBox(height: 10.0),
                   // Latest transactions list
-                  Container(
+                  SizedBox(
                     height: 100.0,
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
