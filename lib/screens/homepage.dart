@@ -6,14 +6,14 @@ import 'package:flutter/cupertino.dart';
 
 import 'package:image_picker/image_picker.dart';
 
-class Homepage extends StatefulWidget {
-  const Homepage({super.key});
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
   @override
-  State<Homepage> createState() => _HomepageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _HomepageState extends State<Homepage> {
+class _HomePageState extends State<HomePage> {
   File? _image;
   final picker = ImagePicker();
 

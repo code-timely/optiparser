@@ -2,8 +2,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:optiparser/screens/homepage.dart';
+import 'package:optiparser/storage/initialise_objectbox.dart';
 
-void main() {
+void main() async{
+
+  WidgetsFlutterBinding.ensureInitialized();
+  await initializeObjectBox();
+  
   runApp(const MyApp());
 }
 
@@ -17,7 +22,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.red,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: const Homepage(),
+      home: const HomePage(),
     );
   }
 }
