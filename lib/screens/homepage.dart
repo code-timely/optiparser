@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:logger/web.dart';
 import 'package:optiparser/components/dasboard.dart';
 // import 'package:optiparser/components/summarybox.dart';
-import 'package:optiparser/storage/models/transaction.dart';
+
 
 import 'package:optiparser/components/transactionCard.dart';
 
@@ -10,6 +10,7 @@ import 'package:optiparser/storage/initialise_objectbox.dart'; // Import dio pac
 import 'package:optiparser/screens/searchpage.dart';
 import 'package:optiparser/components/lastT_seeAll.dart';
 import 'package:optiparser/components/img_service.dart';
+import 'package:optiparser/components/transaction_details.dart';
 
 final log = Logger();
 
@@ -22,24 +23,21 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   // Function to create and add a transaction
-  void createTransaction() {
-    // input String type, double amount
-    // Access the transaction box
-    final box = objectbox.transactionBox;
-
-    // Create a new Transaction object
-    final newTransaction = Transaction(
-        title: "this_is_mjk",
-        merchantName: "Manas Jain Kuniya",
-        amount: 500,
-        date: DateTime.now(),
-        invoiceId: "",
-        isExpense: true,
-        imagePath: "",
-        notes: "");
-
-    // Add the transaction to the ObjectBox store
-    box.put(newTransaction);
+  void createTransaction() async {
+    ImgService imgService = ImgService();
+    var data = await imgService.showOptions(context);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AddTransaction(
+          (transaction) {
+            // Handle transaction submission
+            print(transaction);
+          },
+          initialData: data,
+        ),
+      ),
+    );
   }
 
   AppBar buildAppBar(BuildContext context) {
@@ -65,7 +63,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final ImgService imgService = ImgService();
     final realHeight = MediaQuery.of(context).size.height -
         buildAppBar(context).preferredSize.height -
         MediaQuery.of(context).padding.top;
@@ -154,9 +151,7 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         // onPressed: showOptions,
-        onPressed: () {
-          imgService.showOptions(context);
-        },
+        onPressed: createTransaction,
         shape: const CircleBorder(),
         child: const Icon(Icons.add),
       ),
