@@ -2,13 +2,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:optiparser/screens/homepage.dart';
+import 'package:optiparser/screens/searchpage.dart';
 import 'package:optiparser/storage/initialise_objectbox.dart';
 
 void main() async{
 
   WidgetsFlutterBinding.ensureInitialized();
   await initializeObjectBox();
-  
+
   runApp(const MyApp());
 }
 
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: const HomePage(),
+      // home: const SearchPage(),
     );
   }
 }
