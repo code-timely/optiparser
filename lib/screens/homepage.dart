@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:logger/web.dart';
-import 'package:optiparser/components/summarybox.dart';
-import 'dart:io';
+import 'package:optiparser/components/dasboard.dart';
+// import 'package:optiparser/components/summarybox.dart';
+import 'package:optiparser/storage/models/transaction.dart';
 
-import 'package:flutter/cupertino.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:dio/dio.dart';  // Import dio package
+import 'package:optiparser/components/transactionCard.dart';
+
+import 'package:optiparser/storage/initialise_objectbox.dart'; // Import dio package
+import 'package:optiparser/screens/searchpage.dart';
+import 'package:optiparser/components/lastT_seeAll.dart';
+import 'package:optiparser/components/img_service.dart';
 
 final log = Logger();
 
@@ -17,240 +21,101 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  File? _image;
-  final picker = ImagePicker();
-  final Dio dio = Dio();  // Initialize dio
+  // Function to create and add a transaction
+  void createTransaction() {
+    // input String type, double amount
+    // Access the transaction box
+    final box = objectbox.transactionBox;
 
-  // Image Picker function to get image from gallery
-  Future getImageFromGallery() async {
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    // Create a new Transaction object
+    final newTransaction = Transaction(
+        title: "this_is_mjk",
+        merchantName: "Manas Jain Kuniya",
+        amount: 500,
+        date: DateTime.now(),
+        invoiceId: "",
+        isExpense: true,
+        imagePath: "",
+        notes: "");
 
-    setState(() {
-      if (pickedFile != null) {
-        _image = File(pickedFile.path);
-        sendImageToModel(_image!);
-      }
-    });
+    // Add the transaction to the ObjectBox store
+    box.put(newTransaction);
   }
 
-  // Image Picker function to get image from camera
-  Future getImageFromCamera() async {
-    final pickedFile = await picker.pickImage(source: ImageSource.camera);
-
-    setState(() {
-      if (pickedFile != null) {
-        _image = File(pickedFile.path);
-        sendImageToModel(_image!);
-      }
-    });
-  }
-
-  // Show options to get image from camera or gallery
-  Future showOptions() async {
-    showCupertinoModalPopup(
-      context: context,
-      builder: (context) => CupertinoActionSheet(
-        actions: [
-          CupertinoActionSheetAction(
-            child: const Text('Photo Gallery'),
-            onPressed: () {
-              // close the options modal
-              Navigator.of(context).pop();
-              // get image from gallery
-              getImageFromGallery();
-            },
+  AppBar buildAppBar(BuildContext context) {
+    return AppBar(
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      title: Align(
+        alignment: Alignment.centerLeft,
+        child: Text(
+          "Welcome Back!",
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            letterSpacing: 1.2,
+            color: Colors.white,
+            fontFamily: 'Proxima Nova',
+            textBaseline: TextBaseline.alphabetic,
           ),
-          CupertinoActionSheetAction(
-            child: const Text('Camera'),
-            onPressed: () {
-              // close the options modal
-              Navigator.of(context).pop();
-              // get image from camera
-              getImageFromCamera();
-            },
-          ),
-        ],
+        ),
       ),
     );
   }
 
-  Future<void> sendImageToModel(File imageFile) async {
-    const url = 'https://webhook.site/96040912-4aa1-4bad-8b12-5c77fcbe7cef';
-    
-    FormData formData = FormData.fromMap({
-      'file': await MultipartFile.fromFile(imageFile.path, filename: 'upload.jpg'),
-    });
-    
-    try {
-      Response response = await dio.post(url, data: formData);
-      
-      if (response.statusCode == 200) {
-        log.i('Response JSON: ${response.data}');
-      }
-      else {
-        log.i('Failed to send image. Status code: ${response.statusCode}');
-      }
-    } catch (e) {
-      log.i('Error occurred while sending image: $e');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    final ImgService imgService = ImgService();
+    final realHeight = MediaQuery.of(context).size.height -
+        buildAppBar(context).preferredSize.height -
+        MediaQuery.of(context).padding.top;
+    final realWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'OptiParse',
-          style: TextStyle(
-            fontSize: 24.0,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 2.0,
-            color: Colors.white,
-          ),
-        ),
-        centerTitle: true,
-        backgroundColor: Colors.blueAccent,
-      ),
+      extendBodyBehindAppBar: true,
+      appBar: buildAppBar(context),
       body: SingleChildScrollView(
         child: Column(
           children: [
             // Big Container with Summary
             Container(
-              margin: const EdgeInsets.all(16.0),
-              padding: const EdgeInsets.all(16.0),
-              height: 250.0,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16.0),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Colors.black26,
-                    blurRadius: 10.0,
-                    spreadRadius: 2.0,
-                    offset: Offset(0, 5),
-                  ),
-                ],
-              ),
-              child: const Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Weekly Summary',
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 10.0),
-                  // Placeholder for animations (income, expense, net overall)
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Summarybox(
-                        title: 'Income',
-                        amount: '\$2,500',
-                        color: Colors.green,
-                      ),
-                      Summarybox(
-                        title: 'Expense',
-                        amount: '\$1,200',
-                        color: Colors.red,
-                      ),
-                      Summarybox(
-                        title: 'Net',
-                        amount: '\$1,300',
-                        color: Colors.blue,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+                height: realHeight * 0.46, width: realWidth, child: Dasboard()),
+            SizedBox(
+              height: realHeight * 0.025,
             ),
-
+            // to to all last transactions
+            LastTseeAll(),
             // Recent Transactions Section
             Container(
-              margin:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-              padding: const EdgeInsets.all(16.0),
+              margin: EdgeInsets.only(top: realHeight * 0.01),
+              height: realHeight * 0.45,
+              padding: EdgeInsets.only(bottom: realHeight * 0.125),
               width: double.infinity,
-              decoration: BoxDecoration(
-                color: Colors.grey[100],
-                borderRadius: BorderRadius.circular(16.0),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 8.0,
-                    spreadRadius: 1.0,
-                    offset: Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Column(
-                children: [
-                  // Title and Show More
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        'Recent Transactions',
-                        style: TextStyle(
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          // Show more action
-                        },
-                        child: const Text(
-                          'Show More ->',
-                          style: TextStyle(color: Colors.blueAccent),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10.0),
-                  // Latest transactions list
-                  SizedBox(
-                    height: 100.0,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount:
-                          5, // Adjust the number of transactions displayed
-                      itemBuilder: (context, index) {
-                        return Container(
-                          width: 120.0,
-                          margin: const EdgeInsets.symmetric(horizontal: 8.0),
-                          padding: const EdgeInsets.all(10.0),
-                          decoration: BoxDecoration(
-                            color: Colors.grey[300],
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Transaction ${index + 1}',
-                                style: const TextStyle(
-                                  fontSize: 16.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const Text(
-                                '- \$150',
-                                style: TextStyle(
-                                  color: Color.fromARGB(255, 7, 6, 6),
-                                  fontSize: 14.0,
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ],
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment:
+                      objectbox.transactionBox.getAll().length <= 2
+                          ? MainAxisAlignment.start
+                          : MainAxisAlignment.spaceEvenly,
+                  children: objectbox.transactionBox
+                      .getAll()
+                      .reversed
+                      .toList()
+                      .getRange(
+                          0,
+                          objectbox.transactionBox.getAll().length < 3
+                              ? objectbox.transactionBox.getAll().length
+                              : 3)
+                      .map((tx) {
+                    return TransactionCard(
+                      amount: tx.amount,
+                      date: tx.date,
+                      id: tx.id.toString(),
+                      title: tx.title,
+                      expense: tx.isExpense,
+                    );
+                  }).toList(),
+                ),
               ),
             ),
           ],
@@ -268,7 +133,12 @@ class _HomePageState extends State<HomePage> {
             ),
             IconButton(
               icon: const Icon(Icons.search),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SearchPage()),
+                );
+              },
             ),
             const SizedBox(width: 50), // Space for the floating action button
             IconButton(
@@ -283,7 +153,10 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: showOptions,
+        // onPressed: showOptions,
+        onPressed: () {
+          imgService.showOptions(context);
+        },
         shape: const CircleBorder(),
         child: const Icon(Icons.add),
       ),
