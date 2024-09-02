@@ -10,11 +10,11 @@ class AddTransaction extends StatefulWidget {
   final Map<String, dynamic> initialData;
   final int? transactionId;
 
-  AddTransaction(
-      {required this.initialData, this.transactionId});
+  const AddTransaction(
+      {super.key,required this.initialData, this.transactionId});
 
   @override
-  _AddTransactionState createState() => _AddTransactionState();
+  State<AddTransaction> createState() => _AddTransactionState();
 }
 
 class _AddTransactionState extends State<AddTransaction> {
@@ -59,7 +59,7 @@ class _AddTransactionState extends State<AddTransaction> {
       appBar: buildAppBar(context),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -195,7 +195,7 @@ class _AddTransactionState extends State<AddTransaction> {
                   Navigator.pop(context);
                 },
                 child: Container(
-                  margin: EdgeInsets.all(16.0),
+                  margin: const EdgeInsets.all(16.0),
                   height: 50,
                   width: double.infinity,
                   decoration: BoxDecoration(
@@ -205,12 +205,12 @@ class _AddTransactionState extends State<AddTransaction> {
                       BoxShadow(
                         color: Colors.grey.withOpacity(0.6),
                         blurRadius: 4,
-                        offset: Offset(0, 0),
+                        offset: const Offset(0, 0),
                         spreadRadius: 2,
                       ),
                     ],
                   ),
-                  child: Center(
+                  child: const Center(
                     child: Text(
                       "Save",
                       style: TextStyle(
@@ -231,7 +231,7 @@ class _AddTransactionState extends State<AddTransaction> {
   Text buildText(String name) {
     return Text(
       name,
-      style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
+      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
     );
   }
 
@@ -243,9 +243,9 @@ class _AddTransactionState extends State<AddTransaction> {
           FocusScope.of(context).unfocus();
           Navigator.pop(context);
         },
-        child: Icon(Icons.close, color: Colors.black),
+        child: const Icon(Icons.close, color: Colors.black),
       ),
-      title: Text(
+      title: const Text(
         "Transaction Details",
         style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
       ),

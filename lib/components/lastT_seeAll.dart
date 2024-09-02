@@ -4,9 +4,7 @@ import 'package:optiparser/screens/searchpage.dart';
 // import 'package:responsive_flutter/responsive_flutter.dart';
 
 class LastTseeAll extends StatelessWidget {
-  const LastTseeAll({
-    Key? key,
-  }) : super(key: key);
+  const LastTseeAll({ super.key });
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -15,7 +13,7 @@ class LastTseeAll extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         // crossAxisAlignment: CrossAxisAlignment.baseline,
         children: [
-          Text(
+          const Text(
             "Last Transactions",
             style: TextStyle(
               color: Colors.black,
@@ -28,7 +26,7 @@ class LastTseeAll extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => SearchPage()),
+                MaterialPageRoute(builder: (context) => const SearchPage()),
               );
             },
             child: Text(

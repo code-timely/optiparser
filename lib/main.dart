@@ -1,6 +1,7 @@
 // lib/main.dart
 
 import 'package:flutter/material.dart';
+import 'package:optiparser/components/loading_transition.dart';
 import 'package:optiparser/screens/homepage.dart';
 // import 'package:optiparser/screens/searchpage.dart';
 import 'package:optiparser/storage/initialise_objectbox.dart';
@@ -22,6 +23,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.red,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
+      // home: LoadingPage(),
       home: const HomePage(),
       // home: const SearchPage(),
     );

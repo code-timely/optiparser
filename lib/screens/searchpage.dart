@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:logger/web.dart';
 // import 'package:objectbox/objectbox.dart';
 import 'package:optiparser/components/transaction_tile.dart';
 import 'package:optiparser/storage/models/transaction.dart';
 import 'package:intl/intl.dart';
+
+final log = Logger();
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -308,3 +311,5 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 }
+
+

@@ -175,11 +175,11 @@ class Dashboard extends StatelessWidget {
   final double balance;
 
   const Dashboard({
-    Key? key,
+    super.key,
     required this.income,
     required this.expenses,
     required this.balance,
-  }) : super(key: key);
+  }); 
 
   @override
   Widget build(BuildContext context) {
