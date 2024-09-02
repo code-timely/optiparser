@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:logger/web.dart';
+
+import 'package:optiparser/services/get_amount.dart';
+import 'package:optiparser/services/get_transactions.dart';
+
 import 'package:optiparser/components/dasboard.dart';
-// import 'package:optiparser/components/summarybox.dart';
-
-
 import 'package:optiparser/components/transactionCard.dart';
-
-import 'package:optiparser/storage/initialise_objectbox.dart'; // Import dio package
-import 'package:optiparser/screens/searchpage.dart';
 import 'package:optiparser/components/lastT_seeAll.dart';
 import 'package:optiparser/components/img_service.dart';
 import 'package:optiparser/components/transaction_details.dart';
+
+import 'package:optiparser/storage/initialise_objectbox.dart'; // Import dio package
+import 'package:optiparser/storage/models/transaction.dart';
+
+import 'package:optiparser/screens/searchpage.dart';
 
 final log = Logger();
 
@@ -22,6 +25,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late List<Transaction> transaction;
+  late Map<String, double> amount;
+
   // Function to create and add a transaction
   void createTransaction() async {
     ImgService imgService = ImgService();
@@ -30,21 +36,22 @@ class _HomePageState extends State<HomePage> {
       context,
       MaterialPageRoute(
         builder: (context) => AddTransaction(
-          (transaction) {
-            // Handle transaction submission
-            print(transaction);
-          },
           initialData: data,
         ),
       ),
-    );
+    ).then((_) => {
+          setState(() {
+            amount = getAmount();
+            transaction = getTransactions();
+          })
+        });
   }
 
   AppBar buildAppBar(BuildContext context) {
     return AppBar(
       backgroundColor: Colors.transparent,
       elevation: 0,
-      title: Align(
+      title: const Align(
         alignment: Alignment.centerLeft,
         child: Text(
           "Welcome Back!",
@@ -62,6 +69,13 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    amount = getAmount();
+    transaction = getTransactions();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final realHeight = MediaQuery.of(context).size.height -
         buildAppBar(context).preferredSize.height -
@@ -70,22 +84,28 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: buildAppBar(context),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // Big Container with Summary
-            Container(
-                height: realHeight * 0.46, width: realWidth, child: Dasboard()),
-            SizedBox(
-              height: realHeight * 0.025,
+      body: Column(
+        children: [
+          // Big Container with Summary
+          Container(
+            height: realHeight * 0.46,
+            width: realWidth,
+            child: Dashboard(
+              income: amount['income'] ?? 0.0,
+              expenses: amount['expenses'] ?? 0.0,
+              balance: amount['balance'] ?? 0.0,
             ),
-            // to to all last transactions
-            LastTseeAll(),
-            // Recent Transactions Section
-            Container(
+          ),
+          SizedBox(
+            height: realHeight * 0.025,
+          ),
+          // to to all last transactions
+          LastTseeAll(),
+          // Recent Transactions Section
+          Expanded(
+            child: Container(
               margin: EdgeInsets.only(top: realHeight * 0.01),
-              height: realHeight * 0.45,
-              padding: EdgeInsets.only(bottom: realHeight * 0.125),
+              // padding: EdgeInsets.only(bottom: realHeight * 0.125),
               width: double.infinity,
               child: SingleChildScrollView(
                 child: Column(
@@ -94,29 +114,19 @@ class _HomePageState extends State<HomePage> {
                       objectbox.transactionBox.getAll().length <= 2
                           ? MainAxisAlignment.start
                           : MainAxisAlignment.spaceEvenly,
-                  children: objectbox.transactionBox
-                      .getAll()
-                      .reversed
-                      .toList()
+                  children: transaction
                       .getRange(
-                          0,
-                          objectbox.transactionBox.getAll().length < 3
-                              ? objectbox.transactionBox.getAll().length
-                              : 3)
+                          0, transaction.length < 3 ? transaction.length : 3)
                       .map((tx) {
                     return TransactionCard(
-                      amount: tx.amount,
-                      date: tx.date,
-                      id: tx.id.toString(),
-                      title: tx.title,
-                      expense: tx.isExpense,
+                      transactionId: tx.id,
                     );
                   }).toList(),
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
       bottomNavigationBar: BottomAppBar(
         shape: const CircularNotchedRectangle(),
@@ -126,6 +136,7 @@ class _HomePageState extends State<HomePage> {
           children: [
             IconButton(
               icon: const Icon(Icons.home),
+              color: Colors.blueAccent,
               onPressed: () {},
             ),
             IconButton(
@@ -150,9 +161,9 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        // onPressed: showOptions,
         onPressed: createTransaction,
         shape: const CircleBorder(),
+        backgroundColor: Colors.blueAccent, // Highlight color
         child: const Icon(Icons.add),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

@@ -6,30 +6,39 @@ import 'package:optiparser/storage/models/transaction.dart';
 import 'package:intl/intl.dart';
 
 class AddTransaction extends StatefulWidget {
-  final Function addTransaction;
+  // final Function addTransaction;
   final Map<String, dynamic> initialData;
+  final int? transactionId;
 
-  AddTransaction(this.addTransaction, {required this.initialData});
+  AddTransaction(
+      {required this.initialData, this.transactionId});
 
   @override
   _AddTransactionState createState() => _AddTransactionState();
 }
 
 class _AddTransactionState extends State<AddTransaction> {
-  late String _titleValue;
+  late TextEditingController _titleController;
+  late TextEditingController _vendorsNameController;
+  late TextEditingController _invoiceIdController;
+  late TextEditingController _buyerNameController;
+  late TextEditingController _amountController;
   late DateTime _dateValue;
-  late String _vendorsName;
-  late String _invoiceId;
-  late String _buyerName;
-  late bool _isExpeness;
-  double _amountValue = 0.0;
+  bool _isExpense = true; // Default to expense
 
   @override
   void initState() {
     super.initState();
     DateFormat dateFormat = DateFormat("dd/MM/yyyy");
-    _vendorsName = widget.initialData['vendors_name'] ?? '';
-    _amountValue = widget.initialData['total_amount'] ?? 0.0;
+    _titleController = TextEditingController(text: widget.initialData['title']);
+    _vendorsNameController =
+        TextEditingController(text: widget.initialData['vendors_name']);
+    _invoiceIdController =
+        TextEditingController(text: widget.initialData['invoice_id']);
+    _buyerNameController =
+        TextEditingController(text: widget.initialData['buyer_name']);
+    _amountController = TextEditingController(
+        text: widget.initialData['total_amount']?.toString() ?? '0.0');
     try {
       _dateValue = dateFormat.parse(widget.initialData['date']);
     } catch (e) {
@@ -54,9 +63,63 @@ class _AddTransactionState extends State<AddTransaction> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  DatePicker(updateDateValue: setDate),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: !_isExpense
+                          ? Colors.green[100]
+                          : Colors
+                              .transparent, // Change background color if selected
+                      borderRadius: BorderRadius.circular(
+                          8), // Optional: Add border radius for rounded corners
+                    ),
+                    child: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _isExpense = false;
+                        });
+                      },
+                      icon: Image.asset(
+                        'assets/income.png', // Replace with your actual asset path for income
+                        width: 50,
+                        height: 50,
+                      ),
+                      tooltip: 'Income', // Optional: Tooltip for accessibility
+                    ),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: _isExpense
+                          ? Colors.red[100]
+                          : Colors
+                              .transparent, // Change background color if selected
+                      borderRadius: BorderRadius.circular(
+                          8), // Optional: Add border radius for rounded corners
+                    ),
+                    child: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _isExpense = true;
+                        });
+                      },
+                      icon: Image.asset(
+                        'assets/expeness.png', // Replace with your actual asset path for expense
+                        width: 50,
+                        height: 50,
+                      ),
+                      tooltip: 'Expense', // Optional: Tooltip for accessibility
+                    ),
+                  ),
+                ],
+              ),
+              // const SizedBox(height: 20),
+              const SizedBox(height: 20),
               buildText("Title :"),
               TextField(
-                onChanged: (value) => _titleValue = value,
+                controller: _titleController,
                 cursorColor: Theme.of(context).primaryColor,
                 decoration: kTextFieldDecoration.copyWith(
                   hintText: 'Write your title here',
@@ -64,22 +127,104 @@ class _AddTransactionState extends State<AddTransaction> {
                 style: kTextFieldTextStyle.copyWith(fontSize: 20),
               ),
               const SizedBox(height: 20),
-              const SizedBox(height: 20),
               buildText("Amount :"),
               TextField(
-                onChanged: (value) => _amountValue = double.parse(value),
+                controller: _amountController,
                 cursorColor: Theme.of(context).primaryColor,
                 keyboardType: TextInputType.number,
-                decoration: kTextFieldDecoration,
+                decoration: kTextFieldDecoration.copyWith(
+                  hintText: '₹ Enter amount',
+                ),
                 style: kTextFieldTextStyle.copyWith(fontSize: 20),
               ),
-              const SizedBox(height: 10),
-              DatePicker(updateDateValue: setDate),
+              const SizedBox(height: 20),
+              buildText("Vendor's Name :"),
+              TextField(
+                controller: _vendorsNameController,
+                cursorColor: Theme.of(context).primaryColor,
+                decoration: kTextFieldDecoration.copyWith(
+                  hintText: 'Write vendor\'s name here',
+                ),
+                style: kTextFieldTextStyle.copyWith(fontSize: 20),
+              ),
+              const SizedBox(height: 20),
+              buildText("Invoice ID :"),
+              TextField(
+                controller: _invoiceIdController,
+                cursorColor: Theme.of(context).primaryColor,
+                decoration: kTextFieldDecoration.copyWith(
+                  hintText: 'Write invoice ID here',
+                ),
+                style: kTextFieldTextStyle.copyWith(fontSize: 20),
+              ),
+              const SizedBox(height: 20),
+              buildText("Buyer Name :"),
+              TextField(
+                controller: _buyerNameController,
+                cursorColor: Theme.of(context).primaryColor,
+                decoration: kTextFieldDecoration.copyWith(
+                  hintText: 'Write buyer name here',
+                ),
+                style: kTextFieldTextStyle.copyWith(fontSize: 20),
+              ),
+              const SizedBox(height: 20),
+              InkWell(
+                onTap: () {
+                  // Dismiss the keyboard
+                  FocusScope.of(context).unfocus();
+
+                  // Access the transaction box
+                  final box = objectbox.transactionBox;
+
+                  // Create or update the Transaction object
+                  final newTransaction = Transaction(
+                    id: widget.transactionId ??
+                        0, // Use provided ID or 0 for new transaction
+                    title: _titleController.text,
+                    merchantName: _vendorsNameController.text,
+                    amount: double.parse(_amountController.text),
+                    date: _dateValue,
+                    invoiceId: _invoiceIdController.text,
+                    isExpense: _isExpense,
+                    imagePath: "",
+                    notes: _buyerNameController.text,
+                  );
+
+                  // Add the transaction to the ObjectBox store
+                  box.put(newTransaction);
+                  Navigator.pop(context);
+                },
+                child: Container(
+                  margin: EdgeInsets.all(16.0),
+                  height: 50,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: kPrimaryColor,
+                    borderRadius: BorderRadius.circular(25),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.6),
+                        blurRadius: 4,
+                        offset: Offset(0, 0),
+                        spreadRadius: 2,
+                      ),
+                    ],
+                  ),
+                  child: Center(
+                    child: Text(
+                      "Save",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 22,
+                          fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                ),
+              )
             ],
           ),
         ),
       ),
-      bottomNavigationBar: buildInkWell(context),
     );
   }
 
@@ -90,63 +235,18 @@ class _AddTransactionState extends State<AddTransaction> {
     );
   }
 
-  InkWell buildInkWell(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        // input String type, double amount
-        // Access the transaction box
-        final box = objectbox.transactionBox;
-
-        // Create a new Transaction object
-        final newTransaction = Transaction(
-            title: _titleValue,
-            merchantName: _vendorsName,
-            amount: _amountValue,
-            date: _dateValue,
-            invoiceId: _invoiceId,
-            isExpense: true,
-            imagePath: "",
-            notes: "");
-
-        // Add the transaction to the ObjectBox store
-        box.put(newTransaction);
-        Navigator.pop(context);
-      },
-      child: Container(
-        margin: EdgeInsets.all(16.0),
-        height: 50,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: kPrimaryColor,
-          borderRadius: BorderRadius.circular(25),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.6),
-              blurRadius: 4,
-              offset: Offset(0, 0),
-              spreadRadius: 2,
-            ),
-          ],
-        ),
-        child: Center(
-          child: Text(
-            "Save",
-            style: TextStyle(
-                color: Colors.white, fontSize: 22, fontWeight: FontWeight.w500),
-          ),
-        ),
-      ),
-    );
-  }
-
   AppBar buildAppBar(BuildContext context) {
     return AppBar(
       leading: InkWell(
-        onTap: () => Navigator.pop(context),
+        onTap: () {
+          // Dismiss the keyboard
+          FocusScope.of(context).unfocus();
+          Navigator.pop(context);
+        },
         child: Icon(Icons.close, color: Colors.black),
       ),
       title: Text(
-        "Add Transaction",
+        "Transaction Details",
         style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
       ),
       centerTitle: true,

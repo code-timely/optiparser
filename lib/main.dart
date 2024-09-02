@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:optiparser/screens/homepage.dart';
-import 'package:optiparser/screens/searchpage.dart';
+// import 'package:optiparser/screens/searchpage.dart';
 import 'package:optiparser/storage/initialise_objectbox.dart';
 
 void main() async{
