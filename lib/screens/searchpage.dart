@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:logger/web.dart';
-// import 'package:objectbox/objectbox.dart';
+import 'package:optiparser/components/transactionCard.dart';
 import 'package:optiparser/components/transaction_tile.dart';
+import 'package:optiparser/services/get_filtered_transaction.dart';
 import 'package:optiparser/storage/models/transaction.dart';
 import 'package:intl/intl.dart';
-
-final log = Logger();
+import 'package:optiparser/screens/searchpage.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -16,78 +15,39 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   final TextEditingController _searchController = TextEditingController();
-  String _merchantName = '';
+  double? _min_amount;
+  double? _max_amount;
   DateTime? _dateFrom;
   DateTime? _dateTo;
   bool _isExpense = false;
+  bool _isIncome=false;
+  
+
   List<Transaction> _filteredTransactions = [];
 
+   @override
+  void initState() {
+    super.initState();
+    _filterTransactions();
+  }
+ 
   // Assuming you have a method to fetch filtered transactions from ObjectBox
   void _filterTransactions() {
     setState(() {
       // Logic to filter transactions based on user input
-      // _filteredTransactions = getFilteredTransactions(
-      //   searchText: _searchController.text,
-      //   merchantName: _merchantName,
-      //   dateFrom: _dateFrom,
-      //   dateTo: _dateTo,
-      //   isExpense: _isExpense,
-      // );
+        _filteredTransactions = getFilteredTransactions(
+         searchText: _searchController.text,
+        min_amount: _min_amount,
+        max_amount: _max_amount,
+        dateFrom: _dateFrom,
+        dateTo: _dateTo,
+        expense: _isExpense,
+        income:_isIncome,
+       );
     });
   }
 
-  void _showMerchantNameBottomSheet() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (context) {
-        TextEditingController _merchantNameController =
-            TextEditingController(text: _merchantName);
-        return Padding(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom,
-          ),
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextField(
-                    controller: _merchantNameController,
-                    decoration: InputDecoration(
-                      labelText: 'Merchant Name',
-                      suffixIcon: IconButton(
-                        icon: const Icon(Icons.clear),
-                        onPressed: () {
-                          _merchantNameController.clear();
-                        },
-                      ),
-                    ),
-                    onChanged: (value) {
-                      setState(() {
-                        _merchantName = value;
-                      });
-                    },
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        _merchantName = _merchantNameController.text;
-                        _filterTransactions();
-                      });
-                      Navigator.pop(context);
-                    },
-                    child: const Text('Apply'),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
+  
 
   void _showDateBottomSheet() {
     showModalBottomSheet(
@@ -207,12 +167,17 @@ class _SearchPageState extends State<SearchPage> {
             child: Row(
               children: [
                 ChoiceChip(
-                  label: const Text('Merchant Name'),
-                  selected: _merchantName.isNotEmpty,
+                  label: const Text('Income'),
+                  selected: _isIncome&!(_isIncome&_isExpense),
                   onSelected: (selected) {
-                    _showMerchantNameBottomSheet();
+                    setState(() {
+                      _isIncome = selected;
+                      _isExpense=false;
+                    });
+                    _filterTransactions(); 
                   },
                 ),
+               
                 const SizedBox(width: 8),
                 ChoiceChip(
                   label: const Text('Date'),
@@ -222,12 +187,21 @@ class _SearchPageState extends State<SearchPage> {
                   },
                 ),
                 const SizedBox(width: 8),
+                 ChoiceChip(
+                  label: const Text('Amount'),
+                  selected: _min_amount != null || _max_amount!= null,
+                  onSelected: (selected) {
+                    //_showAmountBottomSheet();
+                  },
+                ),
+                const SizedBox(width: 8),
                 ChoiceChip(
                   label: const Text('Expense'),
-                  selected: _isExpense,
+                  selected: _isExpense&!(_isIncome&_isExpense),
                   onSelected: (selected) {
                     setState(() {
                       _isExpense = selected;
+                      _isIncome=false;
                     });
                     _filterTransactions();
                   },
@@ -242,19 +216,11 @@ class _SearchPageState extends State<SearchPage> {
               separatorBuilder: (context, index) =>
                   Divider(color: Colors.grey[300]),
               itemBuilder: (context, index) {
-                final transaction = _filteredTransactions[index];
-                return GestureDetector(
-                  onTap: () {
-                    _showTransactionDetails(transaction);
-                  },
-                  child: TransactionTile(
-                    title: transaction.title,
-                    description: transaction.merchantName,
-                    amount: transaction.amount,
-                    date: transaction.date,
-                    isExpense: transaction.isExpense,
-                  ),
-                );
+                final transaction = _filteredTransactions.reversed.toList()[index];
+                return  TransactionCard(
+                   transactionId: transaction.id,
+                  );
+                
               },
             ),
           ),
@@ -263,53 +229,4 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
-  void _showTransactionDetails(Transaction transaction) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (context) {
-        return SingleChildScrollView(
-          child: Container(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  transaction.title,
-                  // style: Theme.of(context).textTheme.headline6,
-                ),
-                const SizedBox(height: 8.0),
-                Text(
-                  'Merchant: ${transaction.merchantName}',
-                  // style: Theme.of(context).textTheme.subtitle1,
-                ),
-                const SizedBox(height: 8.0),
-                Text(
-                  'Amount: \$${transaction.amount.toStringAsFixed(2)}',
-                  // style: Theme.of(context).textTheme.subtitle1,
-                ),
-                const SizedBox(height: 8.0),
-                Text(
-                  'Date: ${DateFormat('dd/MM/yyyy').format(transaction.date)}',
-                  // style: Theme.of(context).textTheme.subtitle1,
-                ),
-                const SizedBox(height: 8.0),
-                Text(
-                  'Invoice ID: ${transaction.invoiceId}',
-                  // style: Theme.of(context).textTheme.subtitle1,
-                ),
-                const SizedBox(height: 8.0),
-                Text(
-                  'Notes: ${transaction.notes ?? 'Start noting down your transactions!'}',
-                  // style: Theme.of(context).textTheme.subtitle1,
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
 }
-
-
