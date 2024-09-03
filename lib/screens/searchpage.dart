@@ -31,7 +31,7 @@ class _SearchPageState extends State<SearchPage> {
     _filterTransactions();
   }
  
-  // Assuming you have a method to fetch filtered transactions from ObjectBox
+ 
   void _filterTransactions() {
     setState(() {
       // Logic to filter transactions based on user input
@@ -45,6 +45,72 @@ class _SearchPageState extends State<SearchPage> {
         income:_isIncome,
        );
     });
+  }
+void _showAmountBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        double _startValue = _min_amount ?? 0.0;
+        double _endValue = _max_amount ?? 100000.0;
+
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('Select Amount Range', style: Theme.of(context).textTheme.headlineLarge),
+                  RangeSlider(
+                    values: RangeValues(_startValue, _endValue),
+                    min: 0,
+                    max: 100000,
+                    divisions: 100000,
+                    labels: RangeLabels(
+                      _startValue.toStringAsFixed(0),
+                      _endValue.toStringAsFixed(0),
+                    ),
+                    onChanged: (RangeValues values) {
+                      setState(() {
+                        _startValue = values.start;
+                        _endValue = values.end;
+                      });
+                    },
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            _min_amount = null;
+                            _max_amount = null;
+                            _filterTransactions();
+                          });
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Cancel'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            _min_amount = _startValue;
+                            _max_amount = _endValue;
+                          });
+                          _filterTransactions();
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Apply'),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 
   
@@ -191,7 +257,7 @@ class _SearchPageState extends State<SearchPage> {
                   label: const Text('Amount'),
                   selected: _min_amount != null || _max_amount!= null,
                   onSelected: (selected) {
-                    //_showAmountBottomSheet();
+                    _showAmountBottomSheet();
                   },
                 ),
                 const SizedBox(width: 8),
