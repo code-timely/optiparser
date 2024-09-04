@@ -30,8 +30,8 @@ class TheBarChartState extends State<TheBarChart> {
       i++;
       return makeGroupData(
         i,
-        (e['expense'] / 200).toDouble(),
-        (e['income'] / 200).toDouble(),
+        (e['expense']).toDouble(),
+        (e['income']).toDouble(),
       );
     }).toList();
 
@@ -117,7 +117,7 @@ class TheBarChartState extends State<TheBarChart> {
                         padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
                         child: BarChart(
                           BarChartData(
-                            maxY: 20,
+                            maxY: 2500,
                             titlesData: FlTitlesData(
                               bottomTitles: AxisTitles(
                                 sideTitles: SideTitles(
@@ -149,15 +149,15 @@ class TheBarChartState extends State<TheBarChart> {
                                   reservedSize: 40,
                                   getTitlesWidget: (value, meta) {
                                     String text;
-                                    if (value == 0) {
+                                    if (value == 500) {
                                       text = '500';
-                                    } else if (value == 5) {
+                                    } else if (value == 1000) {
                                       text = '1K';
-                                    } else if (value == 10) {
+                                    } else if (value == 1500) {
                                       text = '1.5K';
-                                    } else if (value == 15) {
+                                    } else if (value == 2000) {
                                       text = '2K';
-                                    } else if (value == 20) {
+                                    } else if (value == 2500) {
                                       text = '2.5K';
                                     } else {
                                       text = '';
@@ -196,7 +196,7 @@ class TheBarChartState extends State<TheBarChart> {
                             barGroups: showingBarGroups,
                             gridData: FlGridData(
                               drawVerticalLine: false,
-                            )
+                            ),
                           ),
                         ),
                       ),
