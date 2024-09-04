@@ -31,7 +31,7 @@ List<Transaction> getFilteredTransactions({
     (expense ? Transaction_.isExpense.equals(true) :Transaction_.isExpense.equals(true) | Transaction_.isExpense.equals(false))&
     (income ? Transaction_.isExpense.equals(false) :Transaction_.isExpense.equals(true) | Transaction_.isExpense.equals(false)) &
     (min_amount!=null?Transaction_.amount.greaterOrEqual(min_amount) :Transaction_.isExpense.equals(true) | Transaction_.isExpense.equals(false)) &
-    (max_amount!=null?Transaction_.amount.greaterOrEqual(max_amount):Transaction_.isExpense.equals(true) | Transaction_.isExpense.equals(false))
+    (max_amount!=null?Transaction_.amount.lessOrEqual(max_amount):Transaction_.isExpense.equals(true) | Transaction_.isExpense.equals(false))
   ).order(Transaction_.id);
 
   final query = queryBuilder.build();
