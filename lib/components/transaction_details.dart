@@ -11,7 +11,7 @@ class AddTransaction extends StatefulWidget {
   final int? transactionId;
 
   const AddTransaction(
-      {super.key,required this.initialData, this.transactionId});
+      {super.key, required this.initialData, this.transactionId});
 
   @override
   State<AddTransaction> createState() => _AddTransactionState();
@@ -24,7 +24,7 @@ class _AddTransactionState extends State<AddTransaction> {
   late TextEditingController _buyerNameController;
   late TextEditingController _amountController;
   late DateTime _dateValue;
-  bool _isExpense = true; // Default to expense
+  bool _isExpense = false; // Default to expense
 
   @override
   void initState() {
@@ -54,6 +54,8 @@ class _AddTransactionState extends State<AddTransaction> {
 
   @override
   Widget build(BuildContext context) {
+    Orientation orientation = MediaQuery.of(context).orientation;
+    bool isPortrait = orientation == Orientation.portrait;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: buildAppBar(context),
@@ -69,7 +71,7 @@ class _AddTransactionState extends State<AddTransaction> {
                   DatePicker(updateDateValue: setDate),
                   Container(
                     decoration: BoxDecoration(
-                      color: !_isExpense
+                      color: !(_isExpense)
                           ? Colors.green[100]
                           : Colors
                               .transparent, // Change background color if selected
