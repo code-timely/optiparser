@@ -545,18 +545,29 @@ class _HomePageState extends State<HomePage> {
               backgroundColor: Colors.blueAccent,
               child: const Icon(Icons.add),
             )
-          : FloatingActionButton(
-              onPressed: () {
-                setState(() {
-                  isBottomNavBarVisible = !isBottomNavBarVisible;
-                });
-              },
-              shape: const CircleBorder(),
-              backgroundColor: Colors.blueAccent,
-              child: Icon(
-                isBottomNavBarVisible ? Icons.close : Icons.menu,
+          : Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              FloatingActionButton(
+                onPressed: () {
+                  setState(() {
+                    isBottomNavBarVisible = !isBottomNavBarVisible;
+                  });
+                },
+                shape: const CircleBorder(),
+                backgroundColor: Colors.blueAccent,
+                child: Icon(
+                  isBottomNavBarVisible ? Icons.close : Icons.menu,
+                ),
               ),
-            ),
+              SizedBox(
+                width: 20,
+              ),
+              FloatingActionButton(
+                onPressed: createTransaction,
+                shape: const CircleBorder(),
+                backgroundColor: Colors.blueAccent,
+                child: const Icon(Icons.add),
+              )
+            ]),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
