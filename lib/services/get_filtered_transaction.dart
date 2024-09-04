@@ -41,3 +41,30 @@ List<Transaction> getFilteredTransactions({
 
   return transactions;
 }
+
+List<Transaction> getAnalysisFilteredTransactions({
+  required DateTime? dateFrom,
+  required DateTime? dateTo,
+
+}) {
+
+  logger.i("db filtering transactions");
+
+  logger.i("$dateFrom\t$dateTo\t");
+
+  final adjustedDateTo = dateTo != null ? dateTo.add(const Duration(days: 1)).subtract(const Duration(seconds: 1)) : null;
+
+  final queryBuilder = objectbox.transactionBox.query(
+
+      (dateFrom != null ? Transaction_.date.greaterOrEqual(dateFrom.millisecondsSinceEpoch) : Transaction_.date.greaterThan(0)) &
+      (adjustedDateTo != null ? Transaction_.date.lessOrEqual(adjustedDateTo.millisecondsSinceEpoch) : Transaction_.date.lessThan(DateTime.now().millisecondsSinceEpoch))
+
+  ).order(Transaction_.id);
+
+  final query = queryBuilder.build();
+  final transactions = query.find();
+
+  query.close();
+
+  return transactions;
+}
