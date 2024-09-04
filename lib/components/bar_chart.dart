@@ -2,6 +2,8 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:optiparser/constants.dart';
+import 'package:optiparser/services/get_filtered_transaction.dart';
+import 'package:optiparser/storage/models/transaction.dart';
 
 class TheBarChart extends StatefulWidget {
   final List listOftransactions;
@@ -19,10 +21,172 @@ class TheBarChartState extends State<TheBarChart> {
   List myList = [];
   late List<BarChartGroupData> rawBarGroups;
   late List<BarChartGroupData> showingBarGroups;
+  DateTime? _dateFrom;
+  DateTime? _dateTo;
+  late DateTime? prevFrom;
+  late DateTime? prevTo;
+  List<Transaction> _filteredTransactions = [];
+
+  void _filterTransactions() {
+    setState(() {
+      // Logic to filter transactions based on user input
+      _filteredTransactions = getAnalysisFilteredTransactions(
+        dateFrom: _dateFrom,
+        dateTo: _dateTo,
+      );
+    });
+    makeList();
+    setState(() {
+      int i = -1;
+      final items = myList.reversed.map((e) {
+        i++;
+        return makeGroupData(
+          i,
+          (e['expense']).toDouble(),
+          (e['income']).toDouble(),
+        );
+      }).toList();
+
+      rawBarGroups = items;
+      showingBarGroups = rawBarGroups;
+    });
+  }
+
+  void _showDateBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                title: const Text('From Date'),
+                trailing: const Icon(Icons.calendar_today),
+                subtitle: _dateFrom != null
+                    ? Text(DateFormat('dd/MM/yyyy').format(_dateFrom!))
+                    : const Text('Select a date'),
+                onTap: () async {
+                  DateTime? picked = await showDatePicker(
+                    context: context,
+                    initialDate: _dateFrom ?? DateTime.now(),
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime.now(),
+                  );
+                  if (picked != null) {
+                    setState(() {
+                      prevFrom = _dateFrom;
+                      _dateFrom = picked;
+                    });
+                    Navigator.pop(context);
+                    _showDateBottomSheet();
+                  }
+                },
+              ),
+              ListTile(
+                title: const Text('To Date'),
+                trailing: const Icon(Icons.calendar_today),
+                subtitle: _dateTo != null
+                    ? Text(DateFormat('dd/MM/yyyy').format(_dateTo!))
+                    : const Text('Select a date'),
+                onTap: () async {
+                  DateTime? picked = await showDatePicker(
+                    context: context,
+                    initialDate: _dateTo ?? DateTime.now(),
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime.now(),
+                  );
+                  if (picked != null) {
+                    setState(() {
+                      prevTo = _dateTo;
+                      _dateTo = picked;
+                    });
+                    Navigator.pop(context);
+                    _showDateBottomSheet();
+                  }
+                },
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        _dateFrom = prevFrom;
+                        _dateTo = prevTo;
+                        myList = [];
+                        _filterTransactions();
+                      });
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Cancel'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      if (_dateTo!.difference(_dateFrom!).inDays > 6){
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('Date Error'),
+                              content: Text('Select dates than span a week or lesser'),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: Text('OK'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      }
+                      else if (_dateTo!.difference(_dateFrom!).inDays <= 0){
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('Date Error'),
+                              content: Text('Seriously Bruhh!! Check those damn dates. Who puts the FROM date to occur after the TO date'),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: Text('OK'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      }
+                      else{
+                        myList = [];
+                        _filterTransactions();
+                        Navigator.pop(context);
+                      }
+                    },
+                    child: const Text('Apply'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 
   @override
   void initState() {
     super.initState();
+    setState(() {
+      this._dateTo = DateTime.now();
+      this._dateFrom = DateTime.now().subtract(Duration(days: 6));
+    });
+    _filterTransactions();
     makeList();
 
     int i = -1;
@@ -30,8 +194,8 @@ class TheBarChartState extends State<TheBarChart> {
       i++;
       return makeGroupData(
         i,
-        (e['expense'] / 200).toDouble(),
-        (e['income'] / 200).toDouble(),
+        (e['expense']).toDouble(),
+        (e['income']).toDouble(),
       );
     }).toList();
 
@@ -40,33 +204,31 @@ class TheBarChartState extends State<TheBarChart> {
   }
 
   void makeList() {
-    if (widget.listOftransactions.isNotEmpty) {
-      for (int i = 0; i < 7; i++) {
-        var dayVar = DateTime.now().subtract(Duration(days: i));
-        double expenses = 0;
-        double incomes = 0;
-        for (int j = 0; j < widget.listOftransactions.length; j++) {
-          if (widget.listOftransactions[j].date.day == dayVar.day &&
-              widget.listOftransactions[j].date.month == dayVar.month &&
-              widget.listOftransactions[j].date.year == dayVar.year) {
-            if( widget.listOftransactions[j].isExpense == true){
-              expenses += widget.listOftransactions[j].amount;
-            }
-            else{
-              incomes += widget.listOftransactions[j].amount;
-            }
+    for (int i = 0; i < 7; i++) {
+      var dayVar = _dateTo?.subtract(Duration(days: i));
+      double expenses = 0;
+      double incomes = 0;
+      for (int j = 0; j < _filteredTransactions.length; j++) {
+        if (_filteredTransactions[j].date.day == dayVar?.day &&
+            _filteredTransactions[j].date.month == dayVar?.month &&
+            _filteredTransactions[j].date.year == dayVar?.year) {
+          if( _filteredTransactions[j].isExpense == true){
+            expenses += _filteredTransactions[j].amount;
+          }
+          else{
+            incomes += _filteredTransactions[j].amount;
           }
         }
-        widget.listOftransactions.removeWhere((element) =>
-            element.date.day == dayVar.day &&
-            element.date.month == dayVar.month &&
-            element.date.year == dayVar.year);
-        myList.add({
-          'expense': expenses,
-          'income': incomes,
-          'day': dayVar,
-        });
       }
+      _filteredTransactions.removeWhere((element) =>
+      element.date.day == dayVar?.day &&
+          element.date.month == dayVar?.month &&
+          element.date.year == dayVar?.year);
+      myList.add({
+        'expense': expenses,
+        'income': incomes,
+        'day': dayVar,
+      });
     }
   }
 
@@ -82,10 +244,26 @@ class TheBarChartState extends State<TheBarChart> {
             style: Theme.of(context).textTheme.titleLarge,
           ),
           SizedBox(height: 15),
-          Text(
-            "${DateTime.now().subtract(Duration(days: 6)).day} ${DateFormat(DateFormat.ABBR_MONTH).format(DateTime.now().subtract(Duration(days: 6)))} ----> ${DateTime.now().day} ${DateFormat(DateFormat.ABBR_MONTH).format(DateTime.now())} \n",
-            style: Theme.of(context).textTheme.bodyLarge,
+          Row(
+            children: [
+              ChoiceChip(
+              label: const Text('Date'),
+              selected: _dateFrom != null || _dateTo != null,
+              onSelected: (selected) {
+                _showDateBottomSheet();
+              },
+            ),
+              Padding(padding: const EdgeInsets.only(left: 130,bottom: 10),
+                child: Align(
+                  alignment: Alignment.bottomRight,
+                  child: Text(
+                    "${_dateFrom?.day} ${DateFormat(DateFormat.ABBR_MONTH).format(_dateFrom!)} ----> ${_dateTo?.day} ${DateFormat(DateFormat.ABBR_MONTH).format(_dateTo!)} \n",
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                ),)
+            ],
           ),
+
           AspectRatio(
             aspectRatio: 1,
             child: Card(
@@ -117,7 +295,7 @@ class TheBarChartState extends State<TheBarChart> {
                         padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
                         child: BarChart(
                           BarChartData(
-                            maxY: 20,
+                            maxY: 2500,
                             titlesData: FlTitlesData(
                               bottomTitles: AxisTitles(
                                 sideTitles: SideTitles(
@@ -149,15 +327,15 @@ class TheBarChartState extends State<TheBarChart> {
                                   reservedSize: 40,
                                   getTitlesWidget: (value, meta) {
                                     String text;
-                                    if (value == 0) {
+                                    if (value == 500) {
                                       text = '500';
-                                    } else if (value == 5) {
+                                    } else if (value == 1000) {
                                       text = '1K';
-                                    } else if (value == 10) {
+                                    } else if (value == 1500) {
                                       text = '1.5K';
-                                    } else if (value == 15) {
+                                    } else if (value == 2000) {
                                       text = '2K';
-                                    } else if (value == 20) {
+                                    } else if (value == 2500) {
                                       text = '2.5K';
                                     } else {
                                       text = '';
@@ -196,7 +374,7 @@ class TheBarChartState extends State<TheBarChart> {
                             barGroups: showingBarGroups,
                             gridData: FlGridData(
                               drawVerticalLine: false,
-                            )
+                            ),
                           ),
                         ),
                       ),

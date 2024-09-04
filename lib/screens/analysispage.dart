@@ -43,7 +43,7 @@ class _AnalysisPageState extends State<AnalysisPage> {
             fontSize: 24,
             fontWeight: FontWeight.bold,
             letterSpacing: 1.2,
-            color: Colors.black54,
+            color: Colors.black,
             fontFamily: 'Proxima Nova',
             textBaseline: TextBaseline.alphabetic,
           ),
