@@ -29,6 +29,10 @@ class _TransactionCardState extends State<TransactionCard> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    // Get the current orientation
+    Orientation orientation = MediaQuery.of(context).orientation;
+    // Check if the orientation is portrait
+    bool isPortrait = orientation == Orientation.portrait;
 
     return FutureBuilder<Transaction?>(
       future: getTransaction(),
@@ -56,7 +60,7 @@ class _TransactionCardState extends State<TransactionCard> {
             },
             child: Container(
               margin: EdgeInsets.only(left: 20, right: 20, top: 13),
-              height: size.height * 0.112,
+              height: isPortrait ? size.height * 0.117 : size.height * 0.2,
               width: size.width,
               decoration: BoxDecoration(
                 color: transaction.isExpense

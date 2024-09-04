@@ -27,8 +27,6 @@ InputDecoration kTextFieldDecoration = InputDecoration(
   contentPadding: EdgeInsets.fromLTRB(30, 19, 20, 19),
   enabledBorder: OutlineInputBorder(
     borderSide: BorderSide(
-      //TODO: The method 'withOpacity' can't be unconditionally invoked because the receiver can be 'null'.
-      // Try making the call conditional (using '?.') or adding a null check to the target ('!').
       color: Colors.grey[400]!.withOpacity(0.8),
     ),
     borderRadius: BorderRadius.circular(18),
@@ -41,8 +39,6 @@ InputDecoration kTextFieldDecoration = InputDecoration(
     ),
   ),
   hintText: '\$50',
-  // TODO: The method 'withOpacity' can't be unconditionally invoked because the receiver can be 'null'.
-  // Try making the call conditional (using '?.') or adding a null check to the target ('!').
   fillColor: Colors.grey[200]!.withOpacity(0.4),
   filled: true,
 );
