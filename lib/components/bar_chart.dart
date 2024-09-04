@@ -17,6 +17,7 @@ class TheBarChartState extends State<TheBarChart> {
   final Color leftBarColor = kPrimaryColor;
   final Color rightBarColor = const Color(0xffff5182);
   final Color nullBarColor = Colors.grey.withOpacity(0.2);
+  final Color exceedBarColor = Colors.orange;
   final double width = 7;
   List myList = [];
   late List<BarChartGroupData> rawBarGroups;
@@ -34,6 +35,8 @@ class TheBarChartState extends State<TheBarChart> {
         dateFrom: _dateFrom,
         dateTo: _dateTo,
       );
+      
+      myList = [];
     });
     makeList();
     setState(() {
@@ -54,6 +57,7 @@ class TheBarChartState extends State<TheBarChart> {
 
   void _showDateBottomSheet() {
     showModalBottomSheet(
+      isScrollControlled: true,
       context: context,
       builder: (context) {
         return Padding(
@@ -185,8 +189,13 @@ class TheBarChartState extends State<TheBarChart> {
     setState(() {
       this._dateTo = DateTime.now();
       this._dateFrom = DateTime.now().subtract(Duration(days: 6));
+      this.prevFrom = _dateFrom;
+      this.prevTo = _dateTo;
     });
-    _filterTransactions();
+    _filteredTransactions = getAnalysisFilteredTransactions(
+        dateFrom: _dateFrom,
+        dateTo: _dateTo,
+      );
     makeList();
 
     int i = -1;
@@ -204,6 +213,7 @@ class TheBarChartState extends State<TheBarChart> {
   }
 
   void makeList() {
+    myList = [];
     for (int i = 0; i < 7; i++) {
       var dayVar = _dateTo?.subtract(Duration(days: i));
       double expenses = 0;
@@ -220,6 +230,12 @@ class TheBarChartState extends State<TheBarChart> {
           }
         }
       }
+      if(expenses > 2500){
+        expenses = 2501;
+      }
+      if(incomes > 2500){
+        incomes = 2501;
+      }
       _filteredTransactions.removeWhere((element) =>
       element.date.day == dayVar?.day &&
           element.date.month == dayVar?.month &&
@@ -234,6 +250,8 @@ class TheBarChartState extends State<TheBarChart> {
 
   @override
   Widget build(BuildContext context) {
+    double screenwidth = MediaQuery.of(context).size.width;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 50),
       child: Column(
@@ -252,15 +270,15 @@ class TheBarChartState extends State<TheBarChart> {
               onSelected: (selected) {
                 _showDateBottomSheet();
               },
-            ),
-              Padding(padding: const EdgeInsets.only(left: 130,bottom: 10),
+            ),Align(alignment: Alignment.centerRight,child:Padding(padding: const EdgeInsets.only(bottom: 10,left:25),
                 child: Align(
                   alignment: Alignment.bottomRight,
                   child: Text(
                     "${_dateFrom?.day} ${DateFormat(DateFormat.ABBR_MONTH).format(_dateFrom!)} ----> ${_dateTo?.day} ${DateFormat(DateFormat.ABBR_MONTH).format(_dateTo!)} \n",
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
-                ),)
+                ),),)
+              
             ],
           ),
 
@@ -291,7 +309,9 @@ class TheBarChartState extends State<TheBarChart> {
                       ],
                     ),
                     Expanded(
-                      child: Padding(
+                      child: Container(
+                        width: screenwidth > 450? 0.7*screenwidth:screenwidth,
+                        child :Padding(
                         padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
                         child: BarChart(
                           BarChartData(
@@ -378,7 +398,7 @@ class TheBarChartState extends State<TheBarChart> {
                           ),
                         ),
                       ),
-                    ),
+                    ),),
                     const SizedBox(height: 10),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -389,9 +409,9 @@ class TheBarChartState extends State<TheBarChart> {
                         Expanded(
                             child:
                                 indicators(context, leftBarColor, "Expenses")),
-                        Expanded(
+                                Expanded(
                             child:
-                                indicators(context, nullBarColor, "Not Yet")),
+                                indicators(context, exceedBarColor, "2.5K + ")),
                       ],
                     ),
                   ],
@@ -433,18 +453,34 @@ class TheBarChartState extends State<TheBarChart> {
   }
 
   BarChartGroupData makeGroupData(int x, double y1, double y2) {
+    Color select_colour1;
+    if(y1 > 2500){
+      select_colour1 = exceedBarColor;
+    }else if(y1 == 0){
+      select_colour1 = nullBarColor;
+    }else{
+      select_colour1 = leftBarColor;
+    }
+    Color select_colour2;
+    if(y2 > 2500){
+      select_colour2 = exceedBarColor;
+    }else if(y2 == 0){
+      select_colour2 = nullBarColor;
+    }else{
+      select_colour2 = rightBarColor;
+    }
     return BarChartGroupData(
       barsSpace: 4,
       x: x,
       barRods: [
         BarChartRodData(
           toY: y1 == 0 ? 20 : y1,
-          color: y1 != 0 ? leftBarColor : nullBarColor,
+          color: select_colour1,
           width: width,
         ),
         BarChartRodData(
           toY: y2 == 0 ? 20 : y2,
-          color: y2 != 0 ? rightBarColor : nullBarColor,
+          color: select_colour2,
           width: width,
         ),
       ],
