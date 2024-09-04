@@ -30,8 +30,8 @@ class TheBarChartState extends State<TheBarChart> {
       i++;
       return makeGroupData(
         i,
-        (e['expense'] / 1000).toDouble(),
-        (e['income'] / 1000).toDouble(),
+        (e['expense'] / 200).toDouble(),
+        (e['income'] / 200).toDouble(),
       );
     }).toList();
 
@@ -48,8 +48,7 @@ class TheBarChartState extends State<TheBarChart> {
         for (int j = 0; j < widget.listOftransactions.length; j++) {
           if (widget.listOftransactions[j].date.day == dayVar.day &&
               widget.listOftransactions[j].date.month == dayVar.month &&
-              widget.listOftransactions[j].date.year == dayVar.year &&
-              widget.listOftransactions[j].isExpense == true) {
+              widget.listOftransactions[j].date.year == dayVar.year) {
             if( widget.listOftransactions[j].isExpense == true){
               expenses += widget.listOftransactions[j].amount;
             }
