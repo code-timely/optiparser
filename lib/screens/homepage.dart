@@ -14,6 +14,7 @@ import 'package:optiparser/storage/initialise_objectbox.dart'; // Import dio pac
 import 'package:optiparser/storage/models/transaction.dart';
 
 import 'package:optiparser/screens/searchpage.dart';
+import 'package:optiparser/screens/analysispage.dart';
 
 final log = Logger();
 
