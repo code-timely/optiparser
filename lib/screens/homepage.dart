@@ -152,10 +152,15 @@ class _HomePageState extends State<HomePage> {
             const SizedBox(width: 50), // Space for the floating action button
             IconButton(
               icon: const Icon(Icons.list),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AnalysisPage()),
+                );
+              },
             ),
             IconButton(
-              icon: const Icon(Icons.arrow_forward),
+              icon: const Icon(Icons.settings),
               onPressed: () {},
             ),
           ],
