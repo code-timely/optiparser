@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:optiparser/components/bottom_bar.dart';
 import 'package:optiparser/components/transactionCard.dart';
 import 'package:optiparser/components/transaction_tile.dart';
 import 'package:optiparser/services/get_filtered_transaction.dart';
@@ -20,33 +21,32 @@ class _SearchPageState extends State<SearchPage> {
   DateTime? _dateFrom;
   DateTime? _dateTo;
   bool _isExpense = false;
-  bool _isIncome=false;
-  
+  bool _isIncome = false;
 
   List<Transaction> _filteredTransactions = [];
 
-   @override
+  @override
   void initState() {
     super.initState();
     _filterTransactions();
   }
- 
- 
+
   void _filterTransactions() {
     setState(() {
       // Logic to filter transactions based on user input
-        _filteredTransactions = getFilteredTransactions(
-         searchText: _searchController.text,
+      _filteredTransactions = getFilteredTransactions(
+        searchText: _searchController.text,
         min_amount: _min_amount,
         max_amount: _max_amount,
         dateFrom: _dateFrom,
         dateTo: _dateTo,
         expense: _isExpense,
-        income:_isIncome,
-       );
+        income: _isIncome,
+      );
     });
   }
-void _showAmountBottomSheet() {
+
+  void _showAmountBottomSheet() {
     showModalBottomSheet(
       context: context,
       builder: (context) {
@@ -60,7 +60,8 @@ void _showAmountBottomSheet() {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text('Select Amount Range', style: Theme.of(context).textTheme.headlineLarge),
+                  Text('Select Amount Range',
+                      style: Theme.of(context).textTheme.headlineLarge),
                   RangeSlider(
                     values: RangeValues(_startValue, _endValue),
                     min: 0,
@@ -112,8 +113,6 @@ void _showAmountBottomSheet() {
       },
     );
   }
-
-  
 
   void _showDateBottomSheet() {
     showModalBottomSheet(
@@ -234,16 +233,15 @@ void _showAmountBottomSheet() {
               children: [
                 ChoiceChip(
                   label: const Text('Income'),
-                  selected: _isIncome&!(_isIncome&_isExpense),
+                  selected: _isIncome & !(_isIncome & _isExpense),
                   onSelected: (selected) {
                     setState(() {
                       _isIncome = selected;
-                      _isExpense=false;
+                      _isExpense = false;
                     });
-                    _filterTransactions(); 
+                    _filterTransactions();
                   },
                 ),
-               
                 const SizedBox(width: 8),
                 ChoiceChip(
                   label: const Text('Date'),
@@ -253,9 +251,9 @@ void _showAmountBottomSheet() {
                   },
                 ),
                 const SizedBox(width: 8),
-                 ChoiceChip(
+                ChoiceChip(
                   label: const Text('Amount'),
-                  selected: _min_amount != null || _max_amount!= null,
+                  selected: _min_amount != null || _max_amount != null,
                   onSelected: (selected) {
                     _showAmountBottomSheet();
                   },
@@ -263,11 +261,11 @@ void _showAmountBottomSheet() {
                 const SizedBox(width: 8),
                 ChoiceChip(
                   label: const Text('Expense'),
-                  selected: _isExpense&!(_isIncome&_isExpense),
+                  selected: _isExpense & !(_isIncome & _isExpense),
                   onSelected: (selected) {
                     setState(() {
                       _isExpense = selected;
-                      _isIncome=false;
+                      _isIncome = false;
                     });
                     _filterTransactions();
                   },
@@ -282,17 +280,18 @@ void _showAmountBottomSheet() {
               separatorBuilder: (context, index) =>
                   Divider(color: Colors.grey[300]),
               itemBuilder: (context, index) {
-                final transaction = _filteredTransactions.reversed.toList()[index];
-                return  TransactionCard(
-                   transactionId: transaction.id,
-                  );
-                
+                final transaction =
+                    _filteredTransactions.reversed.toList()[index];
+                return TransactionCard(
+                  transactionId: transaction.id,
+                  onTransactionUpdated: () => {},
+                );
               },
             ),
           ),
         ],
       ),
+      bottomNavigationBar: buildBottomNavBar(context),
     );
   }
-
 }

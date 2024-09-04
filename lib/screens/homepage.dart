@@ -10,10 +10,11 @@ import 'package:optiparser/components/img_service.dart';
 import 'package:optiparser/components/transaction_details.dart';
 import 'package:optiparser/storage/initialise_objectbox.dart'; // Import objectbox package
 import 'package:optiparser/storage/models/transaction.dart';
-import 'package:optiparser/screens/searchpage.dart';
-import 'package:optiparser/screens/analysispage.dart';
+
 import 'package:optiparser/ui/one_curveClipper.dart';
 import 'package:optiparser/ui/two_curvesClipper.dart';
+
+import 'package:optiparser/components/bottom_bar.dart';
 
 final log = Logger();
 
@@ -72,46 +73,6 @@ class _HomePageState extends State<HomePage> {
             textBaseline: TextBaseline.alphabetic,
           ),
         ),
-      ),
-    );
-  }
-
-  BottomAppBar buildBottomNavBar(BuildContext context) {
-    return BottomAppBar(
-      shape: const CircularNotchedRectangle(),
-      notchMargin: 10.0,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          IconButton(
-            icon: const Icon(Icons.home),
-            color: Colors.blueAccent,
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => SearchPage()),
-              );
-            },
-          ),
-          const SizedBox(width: 50), // Space for the floating action button
-          IconButton(
-            icon: const Icon(Icons.list),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => AnalysisPage()),
-              );
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () {},
-          ),
-        ],
       ),
     );
   }
@@ -190,9 +151,15 @@ class _HomePageState extends State<HomePage> {
                         children: transaction
                             .getRange(0,
                                 transaction.length < 3 ? transaction.length : 3)
-                            .map((tx) {
+                            .map<Widget>((tx) {
                           return TransactionCard(
                             transactionId: tx.id,
+                            onTransactionUpdated: () => {
+                              setState(() {
+                                amount = getAmount();
+                                transaction = getTransactions();
+                              })
+                            },
                           );
                         }).toList(),
                       ),
@@ -245,9 +212,15 @@ class _HomePageState extends State<HomePage> {
                       children: transaction
                           .getRange(0,
                               transaction.length < 3 ? transaction.length : 3)
-                          .map((tx) {
+                          .map<Widget>((tx) {
                         return TransactionCard(
                           transactionId: tx.id,
+                          onTransactionUpdated: () => {
+                            setState(() {
+                              amount = getAmount();
+                              transaction = getTransactions();
+                            })
+                          },
                         );
                       }).toList(),
                     ),

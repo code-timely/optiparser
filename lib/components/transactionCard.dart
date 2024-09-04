@@ -6,8 +6,10 @@ import 'package:optiparser/storage/models/transaction.dart';
 
 class TransactionCard extends StatefulWidget {
   final int transactionId;
+  final Function onTransactionUpdated;
 
-  TransactionCard({required this.transactionId});
+  TransactionCard(
+      {required this.transactionId, required this.onTransactionUpdated});
 
   @override
   State<TransactionCard> createState() => _TransactionCardState();
@@ -56,11 +58,11 @@ class _TransactionCardState extends State<TransactionCard> {
                     transactionId: transaction.id,
                   ),
                 ),
-              ).then((_) => setState(() {}));
+              ).then((_) => {widget.onTransactionUpdated()});
             },
             child: Container(
               margin: EdgeInsets.only(left: 20, right: 20, top: 13),
-              height: isPortrait ? size.height * 0.117 : size.height * 0.2,
+              height: isPortrait ? size.height * 0.117 : size.height * 0.25,
               width: size.width,
               decoration: BoxDecoration(
                 color: transaction.isExpense

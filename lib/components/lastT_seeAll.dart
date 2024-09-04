@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:optiparser/storage/models/transaction.dart';
 import 'package:optiparser/screens/searchpage.dart';
 // import 'package:responsive_flutter/responsive_flutter.dart';
 
 class LastTseeAll extends StatelessWidget {
-  const LastTseeAll({ super.key });
+  const LastTseeAll({super.key});
   @override
   Widget build(BuildContext context) {
     return Padding(

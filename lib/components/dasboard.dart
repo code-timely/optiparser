@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:optiparser/ui/one_curveClipper.dart';
-import 'package:optiparser/ui/two_curvesClipper.dart';
-import 'package:optiparser/constants.dart';
 import 'package:optiparser/components/balance_info.dart';
 
 class Dashboard extends StatelessWidget {
@@ -26,8 +23,8 @@ class Dashboard extends StatelessWidget {
     return Stack(
       children: [
         Positioned(
-          bottom: isPortrait? 0: null,
-          top: isPortrait? null: size.height * 0.25,
+          bottom: isPortrait ? 0 : null,
+          top: isPortrait ? null : size.height * 0.25,
           left: isPortrait ? 25 : 50,
           width: isPortrait ? size.width - 50 : size.width / 2 - 50,
           child: Container(

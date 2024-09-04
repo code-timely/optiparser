@@ -24,7 +24,7 @@ class _AddTransactionState extends State<AddTransaction> {
   late TextEditingController _buyerNameController;
   late TextEditingController _amountController;
   late DateTime _dateValue;
-  bool _isExpense = false; // Default to expense
+  bool _isExpense = true; // Default to expense
 
   @override
   void initState() {
@@ -43,6 +43,9 @@ class _AddTransactionState extends State<AddTransaction> {
       _dateValue = dateFormat.parse(widget.initialData['date']);
     } catch (e) {
       _dateValue = DateTime.now();
+    }
+    if (widget.transactionId != null) {
+      _isExpense = widget.initialData['is_expense'];
     }
   }
 
