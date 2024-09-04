@@ -87,7 +87,6 @@ class _AnalysisPageState extends State<AnalysisPage> {
           children: [
             IconButton(
               icon: const Icon(Icons.home),
-              color: Colors.blueAccent,
               onPressed: () {
                 Navigator.push(
                   context,
@@ -107,6 +106,7 @@ class _AnalysisPageState extends State<AnalysisPage> {
             const SizedBox(width: 50), // Space for the floating action button
             IconButton(
               icon: const Icon(Icons.list),
+              color: Colors.blueAccent,
               onPressed: () {},
             ),
             IconButton(
