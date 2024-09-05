@@ -2,13 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:logger/web.dart';
 import 'package:optiparser/components/bar_chart.dart';
 import 'package:optiparser/components/bottom_bar.dart';
-import 'package:optiparser/screens/homepage.dart';
 
 import 'package:optiparser/services/get_amount.dart';
 import 'package:optiparser/services/get_transactions.dart';
 import 'package:optiparser/storage/models/transaction.dart';
-
-import 'package:optiparser/screens/searchpage.dart';
 
 final log = Logger();
 
@@ -54,16 +51,12 @@ class _AnalysisPageState extends State<AnalysisPage> {
 
   @override
   Widget build(BuildContext context) {
-    final realHeight = MediaQuery.of(context).size.height -
-        buildAppBar(context).preferredSize.height -
-        MediaQuery.of(context).padding.top;
-    final realWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: buildAppBar(context),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.fromLTRB(20, 100, 20, 60),
+          padding: const EdgeInsets.fromLTRB(20, 100, 20, 60),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

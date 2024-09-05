@@ -8,7 +8,7 @@ class Notransaction extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white, // Choose a suitable background color
+      backgroundColor: Colors.transparent, // Choose a suitable background color
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(5.0),
