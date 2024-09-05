@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:optiparser/screens/analysispage.dart';
 import 'package:optiparser/screens/homepage.dart';
 import 'package:optiparser/screens/searchpage.dart';
+import 'package:optiparser/screens/profile_page.dart';
 
 BottomAppBar buildBottomNavBar(BuildContext context) {
   return BottomAppBar(
@@ -32,7 +33,7 @@ BottomAppBar buildBottomNavBar(BuildContext context) {
         ),
         const SizedBox(width: 10), // Space for the floating action button
         IconButton(
-          icon: const Icon(Icons.list),
+          icon: const Icon(Icons.analytics),
           onPressed: () {
             Navigator.pushReplacement(
               context,
@@ -41,8 +42,11 @@ BottomAppBar buildBottomNavBar(BuildContext context) {
           },
         ),
         IconButton(
-          icon: const Icon(Icons.settings),
-          onPressed: () {},
+          icon: const Icon(Icons.person),
+          onPressed: () { Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ProfilePage()),
+            );},
         ),
       ],
     ),

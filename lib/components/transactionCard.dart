@@ -61,16 +61,15 @@ class _TransactionCardState extends State<TransactionCard> {
               ).then((_) => {widget.onTransactionUpdated()});
             },
             child: Container(
-              margin: EdgeInsets.only(left: 20, right: 20, top: 13),
-              height: isPortrait ? size.height * 0.117 : size.height * 0.25,
+              margin: EdgeInsets.only(left: 0, right: 0, top: 13),
+              height: isPortrait ? size.height * 0.157 : size.height * 0.32,
               width: size.width,
               decoration: BoxDecoration(
                 color: transaction.isExpense
-                    ? Colors.red[100]
-                    : Colors
-                        .green[100], // Background color based on expense flag
-                borderRadius: BorderRadius.circular(23),
-                border: Border.all(color: Colors.grey[400]!.withOpacity(0.6)),
+                    ? const Color.fromARGB(255, 255, 255, 255)
+                    : const Color.fromARGB(255, 255, 255, 255), // Background color based on expense flag
+               
+              
               ),
               child: Row(
                 children: [
@@ -140,6 +139,20 @@ class _TransactionCardState extends State<TransactionCard> {
                                 ),
                               ],
                             ),
+                            SizedBox(height: 4),
+                            Expanded(
+                              child: Text(
+                                "${transaction.merchantName}",
+                                softWrap: true,
+                                overflow: TextOverflow.clip,
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 18,
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 4),
                             SizedBox(height: 4),
                             Expanded(
                               child: Text(
