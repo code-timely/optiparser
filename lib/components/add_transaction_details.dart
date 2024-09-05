@@ -63,8 +63,6 @@ class _AddTransactionState extends State<AddTransaction> {
   }
   @override
   Widget build(BuildContext context) {
-    Orientation orientation = MediaQuery.of(context).orientation;
-    bool isPortrait = orientation == Orientation.portrait;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: buildAppBar(context),

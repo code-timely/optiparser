@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -17,7 +18,8 @@ class ProfilePage extends StatelessWidget {
               children: <Widget>[
                 CircleAvatar(
                   radius: 50,
-                 backgroundImage: AssetImage('assets/nawabs.jpg'), // Replace with your image URL
+                  backgroundImage: AssetImage(
+                      'assets/nawabs.jpg'), // Replace with your image URL
                 ),
                 SizedBox(width: 16),
                 Column(
@@ -42,7 +44,7 @@ class ProfilePage extends StatelessWidget {
               ],
             ),
             SizedBox(height: 32),
-            
+
             // Captain and Pool Captain Info
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -115,20 +117,19 @@ class ProfilePage extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.all(10),
                 margin: EdgeInsets.all(1),
-                
-               child:  Column(
-                 children: [
-                   CircleAvatar(
+                child: Column(
+                  children: [
+                    CircleAvatar(
                       radius: 100,
-                     backgroundImage: AssetImage('assets/nawabs.jpg'), // Replace with your image URL
+                      backgroundImage: AssetImage(
+                          'assets/nawabs.jpg'), // Replace with your image URL
                     ),
-                    
                     Text(
                       'Nawabs',
-                        style: GoogleFonts.pirataOne(),
-                      ),
-                 ],
-               ),
+                      style: GoogleFonts.pirataOne(),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
@@ -137,4 +138,3 @@ class ProfilePage extends StatelessWidget {
     );
   }
 }
-

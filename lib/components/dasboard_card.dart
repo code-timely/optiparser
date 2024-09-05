@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:optiparser/components/balance_info.dart';
+import 'package:optiparser/components/column_info.dart';
 
 class Dashboard extends StatelessWidget {
   final double income;

@@ -3,11 +3,11 @@ import 'package:logger/logger.dart';
 import 'package:optiparser/constants.dart';
 import 'package:optiparser/services/get_amount.dart';
 import 'package:optiparser/services/get_transactions.dart';
-import 'package:optiparser/components/dasboard.dart';
-import 'package:optiparser/components/transactionCard.dart';
-import 'package:optiparser/components/lastT_seeAll.dart';
-import 'package:optiparser/components/img_service.dart';
-import 'package:optiparser/components/transaction_details.dart';
+import 'package:optiparser/components/dasboard_card.dart';
+import 'package:optiparser/components/transaction_small_card.dart';
+import 'package:optiparser/components/last_transaction_see_all.dart';
+import 'package:optiparser/services/img_service.dart';
+import 'package:optiparser/components/add_transaction_details.dart';
 import 'package:optiparser/storage/initialise_objectbox.dart'; // Import objectbox package
 import 'package:optiparser/storage/models/transaction.dart';
 
@@ -94,7 +94,7 @@ class _HomePageState extends State<HomePage> {
       body: isPortrait
           ? Column(
               children: [
-                // Big Container with Summary
+                // Big Container with ry
                 Container(
                   height: realHeight * 0.46,
                   width: realWidth,
@@ -224,9 +224,7 @@ class _HomePageState extends State<HomePage> {
                           },
                         );
                       }).toList(),
-                     
                     ),
-                    
                   ),
                 ),
               ),

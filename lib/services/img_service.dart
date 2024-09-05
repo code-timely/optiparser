@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logger/web.dart';
-import 'package:optiparser/components/loading_transition.dart';
+import 'package:optiparser/screens/loading_transition.dart';
 
 final log = Logger();
 

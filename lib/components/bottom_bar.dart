@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:optiparser/screens/analysispage.dart';
 import 'package:optiparser/screens/homepage.dart';
 import 'package:optiparser/screens/searchpage.dart';
-import 'package:optiparser/screens/profile_page.dart';
+import 'package:optiparser/screens/profilepage.dart';
 
 BottomAppBar buildBottomNavBar(BuildContext context) {
   return BottomAppBar(

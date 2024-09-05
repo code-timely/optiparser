@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:optiparser/components/transaction_details.dart';
+import 'package:optiparser/components/add_transaction_details.dart';
 import 'package:optiparser/services/get_transaction_by_id.dart';
 import 'package:optiparser/storage/models/transaction.dart';
 
@@ -58,7 +58,7 @@ class _TransactionCardState extends State<TransactionCard> {
                     transactionId: transaction.id,
                   ),
                 ),
-              ).then((_) => {widget.onTransactionUpdated()});
+              ).then((_) => {setState(() {})});
             },
             child: Container(
               margin: EdgeInsets.only(left: 0, right: 0, top: 13),
@@ -67,9 +67,8 @@ class _TransactionCardState extends State<TransactionCard> {
               decoration: BoxDecoration(
                 color: transaction.isExpense
                     ? const Color.fromARGB(255, 255, 255, 255)
-                    : const Color.fromARGB(255, 255, 255, 255), // Background color based on expense flag
-               
-              
+                    : const Color.fromARGB(255, 255, 255,
+                        255), // Background color based on expense flag
               ),
               child: Row(
                 children: [
