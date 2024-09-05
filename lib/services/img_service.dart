@@ -32,7 +32,7 @@ class ImgService {
 
               // Get image from gallery
               final pickedFile =
-                  await picker.pickImage(source: ImageSource.gallery);
+                  await picker.pickImage(source: ImageSource.gallery, imageQuality: 25);
               if (pickedFile != null) {
                 _image = File(pickedFile.path);
 
@@ -59,7 +59,7 @@ class ImgService {
 
               // Get image from camera
               final pickedFile =
-                  await picker.pickImage(source: ImageSource.camera);
+                  await picker.pickImage(source: ImageSource.camera, imageQuality: 25);
               if (pickedFile != null) {
                 _image = File(pickedFile.path);
                 // Show the LoadingPage
