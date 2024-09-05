@@ -58,7 +58,7 @@ class _TransactionCardState extends State<TransactionCard> {
                     transactionId: transaction.id,
                   ),
                 ),
-              ).then((_) => {setState(() {})});
+              ).then((_) => {widget.onTransactionUpdated()});
             },
             child: Container(
               margin: EdgeInsets.only(left: 0, right: 0, top: 13),
@@ -101,16 +101,18 @@ class _TransactionCardState extends State<TransactionCard> {
                       alignment: Alignment.topRight,
                       child: Container(
                         margin: EdgeInsets.only(top: 5),
-                        padding: EdgeInsets.only(right: 10, top: 1, bottom: 5),
+                        padding: EdgeInsets.only(right: 10, top: 1, bottom: 10),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(height: 5),
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                SizedBox(
+                                  width: 5,
+                                ),
                                 Expanded(
                                   child: Text(
                                     "${transaction.title}",
@@ -119,7 +121,7 @@ class _TransactionCardState extends State<TransactionCard> {
                                     style: TextStyle(
                                       color: Colors.black,
                                       fontWeight: FontWeight.w900,
-                                      fontSize: 22,
+                                      fontSize: 20,
                                     ),
                                   ),
                                 ),
@@ -141,6 +143,18 @@ class _TransactionCardState extends State<TransactionCard> {
                             SizedBox(height: 4),
                             Expanded(
                               child: Text(
+                                "₹${transaction.amount.toStringAsFixed(2)}",
+                                softWrap: false,
+                                overflow: TextOverflow.clip,
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 22,
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: Text(
                                 "${transaction.merchantName}",
                                 softWrap: true,
                                 overflow: TextOverflow.clip,
@@ -151,21 +165,7 @@ class _TransactionCardState extends State<TransactionCard> {
                                 ),
                               ),
                             ),
-                            SizedBox(height: 4),
-                            SizedBox(height: 4),
-                            Expanded(
-                              child: Text(
-                                "₹${transaction.amount.toStringAsFixed(2)}",
-                                softWrap: false,
-                                overflow: TextOverflow.clip,
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 18,
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 4),
+                            SizedBox(height: 1),
                           ],
                         ),
                       ),
