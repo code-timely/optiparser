@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:optiparser/components/bottom_bar.dart';
-import 'package:optiparser/components/transaction_small_card.dart';
+import 'package:optiparser/components/transactionCard.dart';
+import 'package:optiparser/components/transaction_tile.dart';
 import 'package:optiparser/services/get_filtered_transaction.dart';
 import 'package:optiparser/storage/models/transaction.dart';
 import 'package:intl/intl.dart';
+import 'package:optiparser/screens/searchpage.dart';
+import 'package:optiparser/components/noSearch.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -44,7 +47,6 @@ class _SearchPageState extends State<SearchPage> {
     });
   }
 
-// Bottom Sheets to select amount range
   void _showAmountBottomSheet() {
     showModalBottomSheet(
       context: context,
@@ -113,7 +115,6 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
-// Bottom Sheets to select date range
   void _showDateBottomSheet() {
     showModalBottomSheet(
       context: context,
@@ -273,8 +274,11 @@ class _SearchPageState extends State<SearchPage> {
               ],
             ),
           ),
+
           Expanded(
-            child: ListView.separated(
+            child:_filteredTransactions.length==0?
+            Center(child: Nosearch())
+            :ListView.separated(
               itemCount: _filteredTransactions.length,
               padding: const EdgeInsets.all(16.0),
               separatorBuilder: (context, index) =>
