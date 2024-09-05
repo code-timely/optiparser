@@ -6,10 +6,14 @@ import 'package:url_launcher/url_launcher.dart';
 class ProfilePage extends StatelessWidget {
   Future<void> _launchURL(String url) async {
     final Uri uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    } else {
-      throw 'Could not launch $url';
+    try {
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri, mode: LaunchMode.externalApplication); 
+      } else {
+        throw 'Could not launch $url';
+      }
+    } catch (e) {
+      print(e);
     }
   }
 
@@ -17,56 +21,51 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profile Page'),
+        title: Text('We are the Hall 5'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Center(
-              child: Container(
-                padding: EdgeInsets.all(10),
-                margin: EdgeInsets.all(1),
-                child: Column(
-                  children: [
-                    CircleAvatar(
-                      radius: 100,
-                      backgroundImage: AssetImage(
-                          'assets/nawabs.jpg'), // Replace with your image URL
-                    ),
-                    SizedBox(height: 10),
-                    Text(
-                      'Nawabs',
-                      style: GoogleFonts.protestGuerrilla(
-                        fontSize: 30,
-                        fontWeight: FontWeight.w900,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Center(
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  margin: EdgeInsets.all(1),
+                  child: Column(
+                    children: [
+                      CircleAvatar(
+                        radius: 100,
+                        backgroundImage: AssetImage('assets/nawabs.jpg'), // Ensure this path is correct
                       ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(height: 20),
-            Center(
-              child: TextButton.icon(
-                onPressed: () {
-                  _launchURL("https://djthegr8.github.io/optiparse_doc/");
-                },
-                icon: Icon(Icons.link, color: Colors.blue),
-                label: Text(
-                  'Documentation',
-                  style: GoogleFonts.protestGuerrilla(
-                    fontSize: 30,
-                    fontWeight: FontWeight.w900,
+                      SizedBox(height: 10),
+                      Text(
+                        'Nawabs',
+                        style: GoogleFonts.protestGuerrilla(
+                          fontSize: 30,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                style: TextButton.styleFrom(
-                  iconColor: Colors.blue,
+              ),
+              SizedBox(height: 20),
+              Center(
+                child:Center(
+                  child: Text(
+                     'Hall 5 ka tempo high hai!!',
+                          style: GoogleFonts.luckiestGuy(
+                            color:Colors.red,
+                            fontSize: 50,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: BottomNavBar(currentIndex: 3),
