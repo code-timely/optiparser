@@ -274,7 +274,7 @@ class _SearchPageState extends State<SearchPage> {
           ),
           Expanded(
             child: _filteredTransactions.length == 0
-                ? Center(child: Nosearch())
+                ? const Center(child: Nosearch())
                 : ListView.separated(
                     itemCount: _filteredTransactions.length,
                     padding: const EdgeInsets.all(16.0),
@@ -285,7 +285,7 @@ class _SearchPageState extends State<SearchPage> {
                           _filteredTransactions.reversed.toList()[index];
                       return TransactionCard(
                         transactionId: transaction.id,
-                        onTransactionUpdated: () => {},
+                        onTransactionUpdated: () => {_filterTransactions()},
                       );
                     },
                   ),

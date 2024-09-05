@@ -58,7 +58,7 @@ class _TransactionCardState extends State<TransactionCard> {
                     transactionId: transaction.id,
                   ),
                 ),
-              ).then((_) => {setState(() {})});
+              ).then((_) => {setState(() {widget.onTransactionUpdated();})});
             },
             child: Container(
               margin: EdgeInsets.only(left: 0, right: 0, top: 13),

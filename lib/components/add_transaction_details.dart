@@ -11,8 +11,7 @@ class AddTransaction extends StatefulWidget {
   final Map<String, dynamic> initialData;
   final int? transactionId;
 
-  const AddTransaction(
-      {super.key, required this.initialData, this.transactionId});
+  const AddTransaction({super.key, required this.initialData, this.transactionId});
 
   @override
   State<AddTransaction> createState() => _AddTransactionState();
@@ -199,7 +198,6 @@ class _AddTransactionState extends State<AddTransaction> {
                     date: _dateValue,
                     invoiceId: _invoiceIdController.text,
                     isExpense: _isExpense,
-                    imagePath: "",
                     notes: _buyerNameController.text,
                   );
 

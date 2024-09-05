@@ -136,14 +136,14 @@ class _HomePageState extends State<HomePage> {
                   height: realHeight * 0.025,
                 ),
                 // to see all last transactions
-                LastTseeAll(),
+                const LastTseeAll(),
                 // Recent Transactions Section
                 Expanded(
                   child: Container(
                     margin: EdgeInsets.only(top: realHeight * 0.01),
                     width: double.infinity,
                     child: transaction.length == 0
-                        ? Notransaction()
+                        ? const Notransaction()
                         : SingleChildScrollView(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -210,7 +210,7 @@ class _HomePageState extends State<HomePage> {
                   margin: EdgeInsets.only(top: realHeight * 0.1),
                   width: size.width / 2,
                   child: transaction.length == 0
-                      ? Notransaction()
+                      ? const Notransaction()
                       : SingleChildScrollView(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -241,7 +241,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ]),
       // bottomNavigationBar: buildBottomNavBar(context),
-       bottomNavigationBar: BottomNavBar(currentIndex: 0),
+      bottomNavigationBar: BottomNavBar(currentIndex: 0),
       floatingActionButton: FloatingActionButton(
         onPressed: createTransaction,
         shape: const CircleBorder(),
