@@ -197,14 +197,15 @@ class _HomePageState extends State<HomePage> {
                 balance: amount['balance'] ?? 0.0,
               ),
               Positioned(
-                top: size.height * 0.1,
+                top: size.height * 0.01,
+                bottom: size.height * 0.1,
                 left: size.width / 2,
                 child: Container(
                   margin: EdgeInsets.only(top: realHeight * 0.1),
                   width: size.width / 2,
                   child: SingleChildScrollView(
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment:
                           objectbox.transactionBox.getAll().length <= 2
                               ? MainAxisAlignment.start
@@ -228,39 +229,13 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ]),
-      bottomNavigationBar: isPortrait || isBottomNavBarVisible
-          ? buildBottomNavBar(context)
-          : null,
-      floatingActionButton: isPortrait
-          ? FloatingActionButton(
-              onPressed: createTransaction,
-              shape: const CircleBorder(),
-              backgroundColor: Colors.blueAccent,
-              child: const Icon(Icons.add),
-            )
-          : Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              FloatingActionButton(
-                onPressed: () {
-                  setState(() {
-                    isBottomNavBarVisible = !isBottomNavBarVisible;
-                  });
-                },
-                shape: const CircleBorder(),
-                backgroundColor: Colors.blueAccent,
-                child: Icon(
-                  isBottomNavBarVisible ? Icons.close : Icons.menu,
-                ),
-              ),
-              SizedBox(
-                width: 20,
-              ),
-              FloatingActionButton(
-                onPressed: createTransaction,
-                shape: const CircleBorder(),
-                backgroundColor: Colors.blueAccent,
-                child: const Icon(Icons.add),
-              )
-            ]),
+      bottomNavigationBar: buildBottomNavBar(context),
+      floatingActionButton: FloatingActionButton(
+        onPressed: createTransaction,
+        shape: const CircleBorder(),
+        backgroundColor: Colors.blueAccent,
+        child: const Icon(Icons.add),
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }

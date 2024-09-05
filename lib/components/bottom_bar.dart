@@ -5,14 +5,15 @@ import 'package:optiparser/screens/searchpage.dart';
 
 BottomAppBar buildBottomNavBar(BuildContext context) {
   return BottomAppBar(
+    height: 40,
     shape: const CircularNotchedRectangle(),
     notchMargin: 10.0,
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         IconButton(
+          // padding: EdgeInsets.all(10),
           icon: const Icon(Icons.home),
-          color: Colors.blueAccent,
           onPressed: () {
             Navigator.pushReplacement(
               context,
@@ -29,11 +30,11 @@ BottomAppBar buildBottomNavBar(BuildContext context) {
             );
           },
         ),
-        const SizedBox(width: 50), // Space for the floating action button
+        const SizedBox(width: 10), // Space for the floating action button
         IconButton(
           icon: const Icon(Icons.list),
           onPressed: () {
-            Navigator.push(
+            Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => AnalysisPage()),
             );

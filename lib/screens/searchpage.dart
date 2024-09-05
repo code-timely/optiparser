@@ -6,6 +6,7 @@ import 'package:optiparser/services/get_filtered_transaction.dart';
 import 'package:optiparser/storage/models/transaction.dart';
 import 'package:intl/intl.dart';
 import 'package:optiparser/screens/searchpage.dart';
+import 'package:optiparser/screens/homepage.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -46,6 +47,7 @@ class _SearchPageState extends State<SearchPage> {
     });
   }
 
+// Bottom Sheets to select amount range
   void _showAmountBottomSheet() {
     showModalBottomSheet(
       context: context,
@@ -114,6 +116,7 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
+// Bottom Sheets to select date range
   void _showDateBottomSheet() {
     showModalBottomSheet(
       context: context,

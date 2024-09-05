@@ -1,18 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:logger/web.dart';
 import 'package:optiparser/components/bar_chart.dart';
+import 'package:optiparser/components/bottom_bar.dart';
 import 'package:optiparser/screens/homepage.dart';
 
 import 'package:optiparser/services/get_amount.dart';
 import 'package:optiparser/services/get_transactions.dart';
-
-import 'package:optiparser/components/dasboard.dart';
-import 'package:optiparser/components/transactionCard.dart';
-import 'package:optiparser/components/lastT_seeAll.dart';
-import 'package:optiparser/components/img_service.dart';
-import 'package:optiparser/components/transaction_details.dart';
-
-import 'package:optiparser/storage/initialise_objectbox.dart'; // Import dio package
 import 'package:optiparser/storage/models/transaction.dart';
 
 import 'package:optiparser/screens/searchpage.dart';
@@ -79,43 +72,7 @@ class _AnalysisPageState extends State<AnalysisPage> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomAppBar(
-        shape: const CircularNotchedRectangle(),
-        notchMargin: 10.0,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            IconButton(
-              icon: const Icon(Icons.home),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => HomePage()),
-                );
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.search),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SearchPage()),
-                );
-              },
-            ),
-            const SizedBox(width: 50), // Space for the floating action button
-            IconButton(
-              icon: const Icon(Icons.list),
-              color: Colors.blueAccent,
-              onPressed: () {},
-            ),
-            IconButton(
-              icon: const Icon(Icons.settings),
-              onPressed: () {},
-            ),
-          ],
-        ),
-      ),
+      bottomNavigationBar: buildBottomNavBar(context),
     );
   }
 }
