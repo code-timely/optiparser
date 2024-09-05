@@ -54,7 +54,13 @@ class _AddTransactionState extends State<AddTransaction> {
       _dateValue = newDate;
     });
   }
-
+ void deleteTransaction() {
+    if (widget.transactionId != null) {
+      final box = objectbox.transactionBox;
+      box.remove(widget.transactionId!);
+      Navigator.pop(context);
+    }
+  }
   @override
   Widget build(BuildContext context) {
     Orientation orientation = MediaQuery.of(context).orientation;
@@ -200,7 +206,7 @@ class _AddTransactionState extends State<AddTransaction> {
                   Navigator.pop(context);
                 },
                 child: Container(
-                  margin: const EdgeInsets.all(16.0),
+                  margin: const EdgeInsets.all(1.0),
                   height: 50,
                   width: double.infinity,
                   decoration: BoxDecoration(
@@ -224,8 +230,40 @@ class _AddTransactionState extends State<AddTransaction> {
                           fontWeight: FontWeight.w500),
                     ),
                   ),
+                  
                 ),
-              )
+              ),
+              if (widget.transactionId != null) ...[
+                const SizedBox(height: 20),
+                InkWell(
+                  onTap: deleteTransaction,
+                  child: Container(
+                    margin: const EdgeInsets.all(1.0),
+                    height: 50,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 213, 16, 2),
+                      borderRadius: BorderRadius.circular(25),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.6),
+                          blurRadius: 4,
+                          offset: const Offset(0, 0),
+                          spreadRadius: 2,
+                        ),
+                      ],
+                    ),
+                    child: const Center(
+                      child: Text(
+                        "Delete",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 22,
+                            fontWeight: FontWeight.w500),
+                      ),
+                    ),
+                    ),
+                    )]
             ],
           ),
         ),
