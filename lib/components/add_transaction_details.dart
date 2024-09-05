@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:optiparser/components/date_picker.dart';
 import 'package:optiparser/constants.dart';
+import 'package:optiparser/screens/analysispage.dart';
 import 'package:optiparser/storage/initialise_objectbox.dart';
 import 'package:optiparser/storage/models/transaction.dart';
 import 'package:intl/intl.dart';
@@ -40,6 +41,7 @@ class _AddTransactionState extends State<AddTransaction> {
     _amountController = TextEditingController(
         text: widget.initialData['total_amount']?.toString() ?? '0.0');
     try {
+      log.i('Date: ${widget.initialData['date']}');
       _dateValue = dateFormat.parse(widget.initialData['date']);
     } catch (e) {
       _dateValue = DateTime.now();
@@ -54,13 +56,15 @@ class _AddTransactionState extends State<AddTransaction> {
       _dateValue = newDate;
     });
   }
- void deleteTransaction() {
+
+  void deleteTransaction() {
     if (widget.transactionId != null) {
       final box = objectbox.transactionBox;
       box.remove(widget.transactionId!);
       Navigator.pop(context);
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -228,7 +232,6 @@ class _AddTransactionState extends State<AddTransaction> {
                           fontWeight: FontWeight.w500),
                     ),
                   ),
-                  
                 ),
               ),
               if (widget.transactionId != null) ...[
@@ -260,8 +263,9 @@ class _AddTransactionState extends State<AddTransaction> {
                             fontWeight: FontWeight.w500),
                       ),
                     ),
-                    ),
-                    )]
+                  ),
+                )
+              ]
             ],
           ),
         ),

@@ -43,7 +43,7 @@ class ImgService {
                   builder: (_) => const LoadingPage(),
                 );
 
-                var data = await sendImageToModel(context,_image!);
+                var data = await sendImageToModel(context, _image!);
 
                 Navigator.of(parentContext).pop();
                 completer
@@ -63,12 +63,12 @@ class ImgService {
               if (pickedFile != null) {
                 _image = File(pickedFile.path);
                 // Show the LoadingPage
-              showDialog(
-                context: parentContext,
-                barrierDismissible: false,
-                builder: (_) => const LoadingPage(),
-              );
-                var data = await sendImageToModel(context,_image!);
+                showDialog(
+                  context: parentContext,
+                  barrierDismissible: false,
+                  builder: (_) => const LoadingPage(),
+                );
+                var data = await sendImageToModel(context, _image!);
                 Navigator.of(parentContext).pop();
                 completer
                     .complete(data); // Complete the completer with fetched data
@@ -83,19 +83,22 @@ class ImgService {
   }
 
   // Function to send the selected image to the server and return the data
-  Future<Map<String, dynamic>> sendImageToModel(BuildContext context, File imageFile) async {
-  const url = "http://52.140.76.58:8000/api/upload/";
+  Future<Map<String, dynamic>> sendImageToModel(
+      BuildContext context, File imageFile) async {
+    const url = "http://52.140.76.58:8000/api/upload/";
 
-  FormData formData = FormData.fromMap({
-    'file': await MultipartFile.fromFile(imageFile.path, filename: 'upload.jpg'),
-  });
+    FormData formData = FormData.fromMap({
+      'file':
+          await MultipartFile.fromFile(imageFile.path, filename: 'upload.jpg'),
+    });
 
-  try {
+    try {
       Response response = await dio.post(url, data: formData);
 
       if (response.statusCode == 201) {
         log.i('Response JSON: ${response.data}');
-        return fetchDetectedData(response.data['file']);
+        var data = await fetchDetectedData(response.data['file']);
+        return data;
       } else {
         log.i('Failed to send image. Status code: ${response.statusCode}');
         log.i(response);
@@ -105,13 +108,12 @@ class ImgService {
     }
     // Return an empty map if there's an error
     return {};
-}
-
+  }
 
   // Function to fetch detected data using the file name received from the server
   Future<Map<String, dynamic>> fetchDetectedData(String fileName) async {
     const url = "http://52.140.76.58:8000/api/detect/";
-try {
+    try {
       Response response = await dio.post(
         url,
         data: {'file_name': fileName},
@@ -120,7 +122,7 @@ try {
       if (response.statusCode == 201) {
         log.i('Detected Data: ${response.data['data']['date']}');
         return {
-          'date': response.data['data']['data'],
+          'date': response.data['data']['date'],
           'invoice_id': response.data['data']['invoice_id'],
           'vendors_name': response.data['data']['vendors_name'],
           'buyer_name': response.data['data']['buyer_name'],
