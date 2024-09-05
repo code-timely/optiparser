@@ -1,3 +1,3 @@
 # optiparser
 
-for documentation please refer: https://github.com/djthegr8/optiparse_doc/deployments/github-pages
+for documentation please refer: https://djthegr8.github.io/optiparse_doc/
