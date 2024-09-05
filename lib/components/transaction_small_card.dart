@@ -40,11 +40,11 @@ class _TransactionCardState extends State<TransactionCard> {
       future: getTransaction(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (!snapshot.hasData) {
-          return Center(child: Text('Transaction not found'));
+          return const Center(child: Text('Transaction not found'));
         } else {
           final transaction = snapshot.data!;
 
@@ -61,10 +61,11 @@ class _TransactionCardState extends State<TransactionCard> {
               ).then((_) => {setState(() {widget.onTransactionUpdated();})});
             },
             child: Container(
-              margin: EdgeInsets.only(left: 0, right: 0, top: 13),
+              margin: const EdgeInsets.only(left: 0, right: 0, top: 13),
               height: isPortrait ? size.height * 0.157 : size.height * 0.32,
               width: size.width,
               decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(25),
                 color: transaction.isExpense
                     ? const Color.fromARGB(255, 255, 255, 255)
                     : const Color.fromARGB(255, 255, 255,
@@ -73,7 +74,7 @@ class _TransactionCardState extends State<TransactionCard> {
               child: Row(
                 children: [
                   Container(
-                    margin: EdgeInsets.only(
+                    margin: const EdgeInsets.only(
                         left: 10, right: 10), // Reduced left margin
                     height: size.height * 0.081,
                     width: size.height * 0.081,
@@ -85,7 +86,7 @@ class _TransactionCardState extends State<TransactionCard> {
                           color: Colors.grey.withOpacity(0.2),
                           spreadRadius: 3,
                           blurRadius: 13,
-                          offset: Offset(0, 6),
+                          offset: const Offset(0, 6),
                         ),
                       ],
                     ),
@@ -100,8 +101,8 @@ class _TransactionCardState extends State<TransactionCard> {
                     child: Align(
                       alignment: Alignment.topRight,
                       child: Container(
-                        margin: EdgeInsets.only(top: 5),
-                        padding: EdgeInsets.only(right: 10, top: 1, bottom: 10),
+                        margin: const EdgeInsets.only(top: 5),
+                        padding: const EdgeInsets.only(right: 10, top: 1, bottom: 10),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -110,15 +111,15 @@ class _TransactionCardState extends State<TransactionCard> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                SizedBox(
+                                const SizedBox(
                                   width: 5,
                                 ),
                                 Expanded(
                                   child: Text(
-                                    "${transaction.title}",
+                                    transaction.title,
                                     softWrap: false,
                                     overflow: TextOverflow.clip,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: Colors.black,
                                       fontWeight: FontWeight.w900,
                                       fontSize: 20,
@@ -131,7 +132,7 @@ class _TransactionCardState extends State<TransactionCard> {
                                     child: Text(
                                       DateFormat('d MMM yyyy')
                                           .format(transaction.date),
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         color: Colors.black,
                                         fontSize: 14,
                                       ),
@@ -146,7 +147,7 @@ class _TransactionCardState extends State<TransactionCard> {
                                 "₹${transaction.amount.toStringAsFixed(2)}",
                                 softWrap: false,
                                 overflow: TextOverflow.clip,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.w700,
                                   fontSize: 22,
@@ -155,17 +156,17 @@ class _TransactionCardState extends State<TransactionCard> {
                             ),
                             Expanded(
                               child: Text(
-                                "${transaction.merchantName}",
+                                transaction.merchantName,
                                 softWrap: true,
-                                overflow: TextOverflow.clip,
-                                style: TextStyle(
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.w700,
                                   fontSize: 18,
                                 ),
                               ),
                             ),
-                            SizedBox(height: 1),
+                            const SizedBox(height: 1),
                           ],
                         ),
                       ),
