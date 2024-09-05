@@ -18,8 +18,8 @@ class Nosearch extends StatelessWidget {
               // Lottie animation for processing
               Lottie.asset(
                 'assets/search.json',
-                width: 200,
-                height: 150,
+                width: 100,
+                height: 100,
               ),
              
               Text(

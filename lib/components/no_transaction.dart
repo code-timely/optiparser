@@ -18,8 +18,8 @@ class Notransaction extends StatelessWidget {
               // Lottie animation for processing
               Lottie.asset(
                 'assets/Home.json',
-                width: 180,
-                height: 180,
+                width: 150,
+                height: 150,
               ),
               // Space between animation and text
               // Descriptive text
