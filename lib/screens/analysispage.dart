@@ -65,7 +65,8 @@ class _AnalysisPageState extends State<AnalysisPage> {
           ),
         ),
       ),
-      bottomNavigationBar: buildBottomNavBar(context),
+      // bottomNavigationBar: buildBottomNavBar(context),
+       bottomNavigationBar: BottomNavBar(currentIndex: 2),
     );
   }
 }

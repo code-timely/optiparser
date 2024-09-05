@@ -240,7 +240,8 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ]),
-      bottomNavigationBar: buildBottomNavBar(context),
+      // bottomNavigationBar: buildBottomNavBar(context),
+       bottomNavigationBar: BottomNavBar(currentIndex: 0),
       floatingActionButton: FloatingActionButton(
         onPressed: createTransaction,
         shape: const CircleBorder(),

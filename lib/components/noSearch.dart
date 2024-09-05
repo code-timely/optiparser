@@ -8,7 +8,7 @@ class Nosearch extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white, // Choose a suitable background color
+      backgroundColor: Colors.transparent, // Choose a suitable background color
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(5.0),
@@ -18,8 +18,8 @@ class Nosearch extends StatelessWidget {
               // Lottie animation for processing
               Lottie.asset(
                 'assets/search.json',
-                width: 250,
-                height: 250,
+                width: 200,
+                height: 150,
               ),
              
               Text(
