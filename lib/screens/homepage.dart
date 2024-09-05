@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:optiparser/components/no_transaction.dart';
@@ -30,6 +31,8 @@ class _HomePageState extends State<HomePage> {
   late List<Transaction> transaction;
   late Map<String, double> amount;
   bool isBottomNavBarVisible = false; // State variable for visibility
+  bool establishingConnectionWithServer = false;
+  final Dio dio = Dio();
 
   @override
   void initState() {
@@ -37,6 +40,50 @@ class _HomePageState extends State<HomePage> {
     amount = getAmount();
     transaction = getTransactions();
   }
+
+  Future<void> handleImageUpload() async {
+    setState(() {
+      establishingConnectionWithServer = true;
+    });
+    try{
+      const url = "http://52.140.76.58:8000/api/";
+      Response response = await dio.get(url, options: Options(
+      receiveTimeout: const Duration(seconds: 4),
+      sendTimeout: const Duration(seconds: 4),
+      ));
+      if (response.statusCode == 200) {
+        log.i('Server is up and running');
+        setState(() {
+          establishingConnectionWithServer = false;
+        });
+        createTransaction();
+      }
+      else {
+        log.i('Server is down');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Server is down, please try again later..."),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+    catch(e){
+      log.e(e);
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Server is down, please try again later..."),
+            backgroundColor: Colors.red,
+          ),
+      );
+    }
+    finally{
+      setState(() {
+        establishingConnectionWithServer = false;
+      });
+    }
+  }
+
 
   void createTransaction() async {
     ImgService imgService = ImgService();
@@ -242,8 +289,11 @@ class _HomePageState extends State<HomePage> {
             ]),
       // bottomNavigationBar: buildBottomNavBar(context),
       bottomNavigationBar: BottomNavBar(currentIndex: 0),
-      floatingActionButton: FloatingActionButton(
-        onPressed: createTransaction,
+      floatingActionButton: establishingConnectionWithServer
+          ? const CircularProgressIndicator()
+          :
+        FloatingActionButton(
+        onPressed: handleImageUpload,
         shape: const CircleBorder(),
         backgroundColor: Colors.blueAccent,
         child: const Icon(Icons.add),
