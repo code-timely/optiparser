@@ -11,7 +11,6 @@ class Transaction {
   DateTime date;
   String invoiceId;
   bool isExpense;
-  String imagePath;
   String? notes;
 
   Transaction(
@@ -22,7 +21,6 @@ class Transaction {
       required this.date,
       required this.invoiceId,
       required this.isExpense,
-      required this.imagePath,
       this.notes});
   // Method to convert Transaction to Map<String, dynamic>
   Map<String, dynamic> toMap() {
@@ -33,7 +31,6 @@ class Transaction {
       'date': date.toIso8601String(),
       'invoice_id': invoiceId,
       'is_expense': isExpense,
-      'image_path': imagePath,
       'buyer_name': notes,
     };
   }

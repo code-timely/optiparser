@@ -61,11 +61,6 @@ final _entities = <obx_int.ModelEntity>[
             type: 1,
             flags: 0),
         obx_int.ModelProperty(
-            id: const obx_int.IdUid(8, 76810996570972444),
-            name: 'imagePath',
-            type: 9,
-            flags: 0),
-        obx_int.ModelProperty(
             id: const obx_int.IdUid(9, 8879657405695085451),
             name: 'notes',
             type: 9,
@@ -116,7 +111,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
       lastSequenceId: const obx_int.IdUid(0, 0),
       retiredEntityUids: const [],
       retiredIndexUids: const [],
-      retiredPropertyUids: const [],
+      retiredPropertyUids: const [76810996570972444],
       retiredRelationUids: const [],
       modelVersion: 5,
       modelVersionParserMinimum: 5,
@@ -135,7 +130,6 @@ obx_int.ModelDefinition getObjectBoxModel() {
           final titleOffset = fbb.writeString(object.title);
           final merchantNameOffset = fbb.writeString(object.merchantName);
           final invoiceIdOffset = fbb.writeString(object.invoiceId);
-          final imagePathOffset = fbb.writeString(object.imagePath);
           final notesOffset =
               object.notes == null ? null : fbb.writeString(object.notes!);
           fbb.startTable(10);
@@ -146,7 +140,6 @@ obx_int.ModelDefinition getObjectBoxModel() {
           fbb.addInt64(4, object.date.millisecondsSinceEpoch);
           fbb.addOffset(5, invoiceIdOffset);
           fbb.addBool(6, object.isExpense);
-          fbb.addOffset(7, imagePathOffset);
           fbb.addOffset(8, notesOffset);
           fbb.finish(fbb.endTable());
           return object.id;
@@ -169,8 +162,6 @@ obx_int.ModelDefinition getObjectBoxModel() {
               .vTableGet(buffer, rootOffset, 14, '');
           final isExpenseParam =
               const fb.BoolReader().vTableGet(buffer, rootOffset, 16, false);
-          final imagePathParam = const fb.StringReader(asciiOptimization: true)
-              .vTableGet(buffer, rootOffset, 18, '');
           final notesParam = const fb.StringReader(asciiOptimization: true)
               .vTableGetNullable(buffer, rootOffset, 20);
           final object = Transaction(
@@ -181,7 +172,6 @@ obx_int.ModelDefinition getObjectBoxModel() {
               date: dateParam,
               invoiceId: invoiceIdParam,
               isExpense: isExpenseParam,
-              imagePath: imagePathParam,
               notes: notesParam);
 
           return object;
@@ -221,11 +211,7 @@ class Transaction_ {
   static final isExpense =
       obx.QueryBooleanProperty<Transaction>(_entities[0].properties[6]);
 
-  /// See [Transaction.imagePath].
-  static final imagePath =
-      obx.QueryStringProperty<Transaction>(_entities[0].properties[7]);
-
   /// See [Transaction.notes].
   static final notes =
-      obx.QueryStringProperty<Transaction>(_entities[0].properties[8]);
+      obx.QueryStringProperty<Transaction>(_entities[0].properties[7]);
 }

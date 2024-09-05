@@ -45,11 +45,6 @@
           "type": 1
         },
         {
-          "id": "8:76810996570972444",
-          "name": "imagePath",
-          "type": 9
-        },
-        {
           "id": "9:8879657405695085451",
           "name": "notes",
           "type": 9
@@ -66,7 +61,9 @@
   "modelVersionParserMinimum": 5,
   "retiredEntityUids": [],
   "retiredIndexUids": [],
-  "retiredPropertyUids": [],
+  "retiredPropertyUids": [
+    76810996570972444
+  ],
   "retiredRelationUids": [],
   "version": 1
 }
